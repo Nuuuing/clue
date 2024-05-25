@@ -149,11 +149,16 @@ namespace clue
             settingPlayerCard();
         }
 
-        public int rollDice()
+        public int rollDice() //주사위 두개 굴리기
         {
             int diceCount = 0;
 
+            Random rand = new Random();
 
+            int dice1 = rand.Next(1, 7);
+            int dice2 = rand.Next(1, 7);
+
+            diceCount = dice1 + dice2;
 
             return diceCount;
         }
