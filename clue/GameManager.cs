@@ -122,7 +122,7 @@ namespace clue
 
             while (checkTime < 3)
             {
-                num = rand.Next(0, 20);
+                num = rand.Next(0, 22);
                 Card tempCard = allCardList[num];
 
                 if (!corrCard.Any())
@@ -151,7 +151,7 @@ namespace clue
 
         public int rollDice() //주사위 두개 굴리기
         {
-            int diceCount = 0;
+            int diceCount;
 
             Random rand = new Random();
 
