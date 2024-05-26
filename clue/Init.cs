@@ -239,8 +239,8 @@ namespace clue
         public static void gameManagerInit()
         {
             //gamemanager 초기화
-            Console.SetWindowSize(130, 45);
-            Console.SetBufferSize(130, 45);
+            Console.SetWindowSize(120, 45);
+            Console.SetBufferSize(120, 45);
 
             setMap();
         }

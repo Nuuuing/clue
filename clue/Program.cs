@@ -80,77 +80,75 @@ namespace clue
                     {
                         com1.setMoveCount(gm.rollDice());   //주사위
 
-                        if(com1.CheckIsLoc())
+                        if (com1.CheckIsLoc())
                         {
                             //현재 장소가 장소인지 체크
                             //TODO: 추리하기
-                            //자동 추리를 어케 진행할까
-                            //현재 알고있지 않은 무기, 인물 정보를 하나씩 랜덤으로 가져와서
                             //현재위치 번호를 저장하고 문구띄우기 -> ~~가 ~~로 추리했습니다.
 
+                            //TODO: 추리 할 필요가 없는 장소인지 체크하고, 추리 해야할 장소면 추리 진행
                             com1.Guess(gm); //추리할카드 저장
                             //com2 증명
                             //com3 증명
                             //user 증명
+                            //TODO: 증명추가하기
                         }
-                        if (com1.CheckGoLocation() == true)
+                        else
                         {
-
-                            //밑에 메소드 다 분리하기
-                            //다시 경로 탐색 true
-                            //TODO: 랜덤으로 장소 좌표 넣기 -> 체크하기
-                            List<(int, int)> path = com1.FindShortestPath(gm.map, com1.position, com1.GetRandomCoor(gm.GetAllCard()));
-                            com1.goPath.Clear();
-                            if (path != null)
+                            if (com1.CheckGoLocation() == true)
                             {
-                                for (int i = 0; i < path.Count; i++)
-                                {   //가고있는 경로 큐에 담음
-                                    com1.goPath.Enqueue(path[i]);
+
+                                //밑에 메소드 다 분리하기
+                                //다시 경로 탐색 true
+                                //TODO: 랜덤으로 장소 좌표 넣기 -> 체크하기
+                                List<(int, int)> path = com1.FindShortestPath(gm.map, com1.position, com1.GetRandomCoor(gm.GetAllCard()));
+                                com1.goPath.Clear();
+                                if (path != null)
+                                {
+                                    for (int i = 0; i < path.Count; i++)
+                                    {   //가고있는 경로 큐에 담음
+                                        com1.goPath.Enqueue(path[i]);
+                                    }
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Path not found");
+                                }
+                                //이동
+                                for (int i = 0; i < com1.getMoveCount(); i++)
+                                {
+                                    if (com1.goPath.Count == 0)
+                                    {
+                                        break;
+                                    }
+                                    com1.position = com1.goPath.Dequeue();
+                                    //맵 출력
+                                    Console.SetCursorPosition(0, 0);
+
+                                    Console.WriteLine("(" + user.position.Item1 + "," + user.position.Item2 + ")");
+                                    Console.WriteLine(GameManager.Instance.map[user.position.Item1, user.position.Item2]);
+                                    Init.viewMap(user, com1, com2, com3);
                                 }
                             }
                             else
                             {
-                                Console.WriteLine("Path not found");
-                            }
-                            //이동
-                            for (int i = 0; i < com1.getMoveCount(); i++)
-                            {
-                                if (com1.goPath.Count == 0)
+                                //이동
+                                for (int i = 0; i < com1.getMoveCount(); i++)
                                 {
-                                    break;
-                                }
-                                com1.position = com1.goPath.Dequeue();
-                                //맵 출력
-                                Console.SetCursorPosition(0, 0);
+                                    if (com1.goPath.Count == 0)
+                                    {
+                                        break;
+                                    }
+                                    com1.position = com1.goPath.Dequeue();
+                                    //맵 출력
+                                    Console.SetCursorPosition(0, 0);
 
-                                Console.WriteLine("(" + user.position.Item1 + "," + user.position.Item2 + ")");
-                                Console.WriteLine(GameManager.Instance.map[user.position.Item1, user.position.Item2]);
-                                Init.viewMap(user, com1, com2, com3);
+                                    Console.WriteLine("(" + user.position.Item1 + "," + user.position.Item2 + ")");
+                                    Console.WriteLine(GameManager.Instance.map[user.position.Item1, user.position.Item2]);
+                                    Init.viewMap(user, com1, com2, com3);
+                                }
                             }
                         }
-                        else
-                        {
-                            //이동
-                            for (int i = 0; i < com1.getMoveCount(); i++)
-                            {
-                                if (com1.goPath.Count == 0)
-                                {
-                                    break;
-                                }
-                                com1.position = com1.goPath.Dequeue();
-                                //맵 출력
-                                Console.SetCursorPosition(0, 0);
-
-                                Console.WriteLine("(" + user.position.Item1 + "," + user.position.Item2 + ")");
-                                Console.WriteLine(GameManager.Instance.map[user.position.Item1, user.position.Item2]);
-                                Init.viewMap(user, com1, com2, com3);
-                            }
-                        }
-
-                        //com1 턴
-                        //    if -현재 턴이 장소 턴 + 가지고 있는 정보가 아니면 추리
-                        //else -이동
-
                     }
                     gm.turn++;
                 }
@@ -160,59 +158,64 @@ namespace clue
                     {
                         com2.setMoveCount(gm.rollDice());   //주사위
 
-                        if (com2.CheckGoLocation() == true)
+                        if (com2.CheckIsLoc())
                         {
-                            //다시 경로 탐색 true
-                            List<(int, int)> path = com2.FindShortestPath(gm.map, com2.position, (4, 6));
-                            com2.goPath.Clear();
-                            if (path != null)
+                            com2.Guess(gm); //추리할카드 저장
+                        }
+                        else
+                        {
+                            if (com2.CheckGoLocation() == true)
                             {
-                                for (int i = 0; i < path.Count; i++)
-                                {   //가고있는 경로 큐에 담음
-                                    com2.goPath.Enqueue(path[i]);
+                                //다시 경로 탐색 true
+                                List<(int, int)> path = com2.FindShortestPath(gm.map, com2.position, (4, 6));
+                                com2.goPath.Clear();
+                                if (path != null)
+                                {
+                                    for (int i = 0; i < path.Count; i++)
+                                    {   //가고있는 경로 큐에 담음
+                                        com2.goPath.Enqueue(path[i]);
+                                    }
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Path not found2");
+                                }
+                                //이동
+                                for (int i = 0; i < com2.getMoveCount(); i++)
+                                {
+                                    if (com2.goPath.Count == 0)
+                                    {
+                                        break;
+                                    }
+                                    com2.position = com2.goPath.Dequeue();
+                                    //맵 출력
+                                    Console.SetCursorPosition(0, 0);
+
+                                    Console.WriteLine("(" + user.position.Item1 + "," + user.position.Item2 + ")");
+                                    Console.WriteLine(GameManager.Instance.map[user.position.Item1, user.position.Item2]);
+                                    Init.viewMap(user, com1, com2, com3);
                                 }
                             }
                             else
                             {
-                                Console.WriteLine("Path not found2");
-                            }
-                            //이동
-                            for (int i = 0; i < com2.getMoveCount(); i++)
-                            {
-                                if (com2.goPath.Count == 0)
+                                //이동
+                                for (int i = 0; i < com2.getMoveCount(); i++)
                                 {
-                                    break;
-                                    Console.WriteLine("도착!!!22");
-                                    Console.ReadLine();
+                                    if (com2.goPath.Count == 0)
+                                    {
+                                        break;
+                                    }
+                                    com2.position = com2.goPath.Dequeue();
+                                    //맵 출력
+                                    Console.SetCursorPosition(0, 0);
+
+                                    Console.WriteLine("(" + user.position.Item1 + "," + user.position.Item2 + ")");
+                                    Console.WriteLine(GameManager.Instance.map[user.position.Item1, user.position.Item2]);
+                                    Init.viewMap(user, com1, com2, com3);
                                 }
-                                com2.position = com2.goPath.Dequeue();
-                                //맵 출력
-                                Console.SetCursorPosition(0, 0);
-
-                                Console.WriteLine("(" + user.position.Item1 + "," + user.position.Item2 + ")");
-                                Console.WriteLine(GameManager.Instance.map[user.position.Item1, user.position.Item2]);
-                                Init.viewMap(user, com1, com2, com3);
                             }
-                        }
-                        else
-                        {
-                            //이동
-                            for (int i = 0; i < com2.getMoveCount(); i++)
-                            {
-                                if (com2.goPath.Count == 0)
-                                {
-                                    break;
-                                }
-                                com2.position = com2.goPath.Dequeue();
-                                //맵 출력
-                                Console.SetCursorPosition(0, 0);
 
-                                Console.WriteLine("(" + user.position.Item1 + "," + user.position.Item2 + ")");
-                                Console.WriteLine(GameManager.Instance.map[user.position.Item1, user.position.Item2]);
-                                Init.viewMap(user, com1, com2, com3);
-                            }
                         }
-
                     }
                     gm.turn++;
                 }
@@ -222,60 +225,63 @@ namespace clue
                     {
                         com3.setMoveCount(gm.rollDice());   //주사위
 
-                        if (com3.CheckGoLocation() == true)
+                        if (com2.CheckIsLoc())
                         {
-                            //다시 경로 탐색 true
-                            List<(int, int)> path = com3.FindShortestPath(gm.map, com3.position, (4, 6));
-                            com3.goPath.Clear();
-                            if (path != null)
+                            com2.Guess(gm); //추리할카드 저장
+                        }
+                        else
+                        {
+                            if (com3.CheckGoLocation() == true)
                             {
-                                for (int i = 0; i < path.Count; i++)
-                                {   //가고있는 경로 큐에 담음
-                                    com3.goPath.Enqueue(path[i]);
+                                //다시 경로 탐색 true
+                                List<(int, int)> path = com3.FindShortestPath(gm.map, com3.position, (4, 6));
+                                com3.goPath.Clear();
+                                if (path != null)
+                                {
+                                    for (int i = 0; i < path.Count; i++)
+                                    {   //가고있는 경로 큐에 담음
+                                        com3.goPath.Enqueue(path[i]);
+                                    }
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Path not found2");
+                                }
+                                //이동
+                                for (int i = 0; i < com3.getMoveCount(); i++)
+                                {
+                                    if (com3.goPath.Count == 0)
+                                    {
+                                        break;
+                                    }
+                                    com3.position = com3.goPath.Dequeue();
+                                    //queue가 0일때 -> 장소에 도착했을때. 큐 초기화하고 -> 추리시작
+                                    //맵 출력
+                                    Console.SetCursorPosition(0, 0);
+
+                                    Console.WriteLine("(" + user.position.Item1 + "," + user.position.Item2 + ")");
+                                    Console.WriteLine(GameManager.Instance.map[user.position.Item1, user.position.Item2]);
+                                    Init.viewMap(user, com1, com2, com3);
                                 }
                             }
                             else
                             {
-                                Console.WriteLine("Path not found2");
-                            }
-                            //이동
-                            for (int i = 0; i < com3.getMoveCount(); i++)
-                            {
-                                if(com3.goPath.Count ==0)
+                                //이동
+                                for (int i = 0; i < com3.getMoveCount(); i++)
                                 {
-                                    break;
-                                    Console.WriteLine("도착!!!33");
-                                    Console.ReadLine();
+                                    if (com3.goPath.Count == 0)
+                                    {
+                                        break;
+                                    }
+
+                                    com3.position = com3.goPath.Dequeue();
+                                    //맵 출력
+                                    Console.SetCursorPosition(0, 0);
+
+                                    Console.WriteLine("(" + user.position.Item1 + "," + user.position.Item2 + ")");
+                                    Console.WriteLine(GameManager.Instance.map[user.position.Item1, user.position.Item2]);
+                                    Init.viewMap(user, com1, com2, com3);
                                 }
-                                com3.position = com3.goPath.Dequeue();
-                                //queue가 0일때 -> 장소에 도착했을때. 큐 초기화하고 -> 추리시작
-                                //맵 출력
-                                Console.SetCursorPosition(0, 0);
-
-                                Console.WriteLine("(" + user.position.Item1 + "," + user.position.Item2 + ")");
-                                Console.WriteLine(GameManager.Instance.map[user.position.Item1, user.position.Item2]);
-                                Init.viewMap(user, com1, com2, com3);
-                            }
-                        }
-                        else
-                        {
-                            //이동
-                            for (int i = 0; i < com3.getMoveCount(); i++)
-                            {
-                                if (com3.goPath.Count == 0)
-                                {
-                                    break;
-                                    Console.WriteLine("도착!!!33");
-                                    Console.ReadLine();
-                                }
-
-                                com3.position = com3.goPath.Dequeue();
-                                //맵 출력
-                                Console.SetCursorPosition(0, 0);
-
-                                Console.WriteLine("(" + user.position.Item1 + "," + user.position.Item2 + ")");
-                                Console.WriteLine(GameManager.Instance.map[user.position.Item1, user.position.Item2]);
-                                Init.viewMap(user, com1, com2, com3);
                             }
                         }
                     }
