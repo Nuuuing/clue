@@ -8,6 +8,8 @@ namespace clue
 {
     class Program
     {
+        //TODO: 메소드 명명 수정하기 
+
         static void Main(string[] args)
         {
             Init.gameManagerInit();
@@ -20,6 +22,10 @@ namespace clue
             Com com2 = new Com(gm.getStartCardList(2));
             Com com3 = new Com(gm.getStartCardList(3));
             //카드 나누어주기
+            com1.AddKnowCard(com1.getCardList());
+            com2.AddKnowCard(com2.getCardList());
+            com3.AddKnowCard(com3.getCardList());
+            //알고있는 카드 정보에 처음 뽑은 카드 정보 넣기
 
             //Init.viewGameState(user);
             //user.getCardList();
@@ -38,12 +44,12 @@ namespace clue
                         //1. 이동 2. 추리
 
                         ConsoleKey key;
-                        while (user.getMoveCount() >= 0)
+                        while (user.getMoveCount() > 0)
                         {
                             Console.SetCursorPosition(0, 0);
 
                             Console.WriteLine("(" + user.position.Item1 + "," + user.position.Item2 + ")");
-                            Console.WriteLine(GameManager.Instance.map[user.position.Item1, user.position.Item2]);
+                            Console.WriteLine(user.getMoveCount());
                             Init.viewMap(user, com1, com2, com3);
 
                             key = Console.ReadKey(true).Key;
@@ -74,10 +80,26 @@ namespace clue
                     {
                         com1.setMoveCount(gm.rollDice());   //주사위
 
+                        if(com1.CheckIsLoc())
+                        {
+                            //현재 장소가 장소인지 체크
+                            //TODO: 추리하기
+                            //자동 추리를 어케 진행할까
+                            //현재 알고있지 않은 무기, 인물 정보를 하나씩 랜덤으로 가져와서
+                            //현재위치 번호를 저장하고 문구띄우기 -> ~~가 ~~로 추리했습니다.
+
+                            com1.Guess(gm); //추리할카드 저장
+                            //com2 증명
+                            //com3 증명
+                            //user 증명
+                        }
                         if (com1.CheckGoLocation() == true)
                         {
+
+                            //밑에 메소드 다 분리하기
                             //다시 경로 탐색 true
-                            List<(int, int)> path = com1.FindShortestPath(gm.map, (9, 12), (4, 6));
+                            //TODO: 랜덤으로 장소 좌표 넣기 -> 체크하기
+                            List<(int, int)> path = com1.FindShortestPath(gm.map, com1.position, com1.GetRandomCoor(gm.GetAllCard()));
                             com1.goPath.Clear();
                             if (path != null)
                             {
@@ -93,8 +115,17 @@ namespace clue
                             //이동
                             for (int i = 0; i < com1.getMoveCount(); i++)
                             {
+                                if (com1.goPath.Count == 0)
+                                {
+                                    break;
+                                }
                                 com1.position = com1.goPath.Dequeue();
                                 //맵 출력
+                                Console.SetCursorPosition(0, 0);
+
+                                Console.WriteLine("(" + user.position.Item1 + "," + user.position.Item2 + ")");
+                                Console.WriteLine(GameManager.Instance.map[user.position.Item1, user.position.Item2]);
+                                Init.viewMap(user, com1, com2, com3);
                             }
                         }
                         else
@@ -102,8 +133,17 @@ namespace clue
                             //이동
                             for (int i = 0; i < com1.getMoveCount(); i++)
                             {
+                                if (com1.goPath.Count == 0)
+                                {
+                                    break;
+                                }
                                 com1.position = com1.goPath.Dequeue();
                                 //맵 출력
+                                Console.SetCursorPosition(0, 0);
+
+                                Console.WriteLine("(" + user.position.Item1 + "," + user.position.Item2 + ")");
+                                Console.WriteLine(GameManager.Instance.map[user.position.Item1, user.position.Item2]);
+                                Init.viewMap(user, com1, com2, com3);
                             }
                         }
 
@@ -123,7 +163,7 @@ namespace clue
                         if (com2.CheckGoLocation() == true)
                         {
                             //다시 경로 탐색 true
-                            List<(int, int)> path = com2.FindShortestPath(gm.map, (9, 12), (4, 6));
+                            List<(int, int)> path = com2.FindShortestPath(gm.map, com2.position, (4, 6));
                             com2.goPath.Clear();
                             if (path != null)
                             {
@@ -139,8 +179,19 @@ namespace clue
                             //이동
                             for (int i = 0; i < com2.getMoveCount(); i++)
                             {
+                                if (com2.goPath.Count == 0)
+                                {
+                                    break;
+                                    Console.WriteLine("도착!!!22");
+                                    Console.ReadLine();
+                                }
                                 com2.position = com2.goPath.Dequeue();
                                 //맵 출력
+                                Console.SetCursorPosition(0, 0);
+
+                                Console.WriteLine("(" + user.position.Item1 + "," + user.position.Item2 + ")");
+                                Console.WriteLine(GameManager.Instance.map[user.position.Item1, user.position.Item2]);
+                                Init.viewMap(user, com1, com2, com3);
                             }
                         }
                         else
@@ -148,8 +199,17 @@ namespace clue
                             //이동
                             for (int i = 0; i < com2.getMoveCount(); i++)
                             {
+                                if (com2.goPath.Count == 0)
+                                {
+                                    break;
+                                }
                                 com2.position = com2.goPath.Dequeue();
                                 //맵 출력
+                                Console.SetCursorPosition(0, 0);
+
+                                Console.WriteLine("(" + user.position.Item1 + "," + user.position.Item2 + ")");
+                                Console.WriteLine(GameManager.Instance.map[user.position.Item1, user.position.Item2]);
+                                Init.viewMap(user, com1, com2, com3);
                             }
                         }
 
@@ -165,7 +225,7 @@ namespace clue
                         if (com3.CheckGoLocation() == true)
                         {
                             //다시 경로 탐색 true
-                            List<(int, int)> path = com3.FindShortestPath(gm.map, (9, 12), (4, 6));
+                            List<(int, int)> path = com3.FindShortestPath(gm.map, com3.position, (4, 6));
                             com3.goPath.Clear();
                             if (path != null)
                             {
@@ -181,8 +241,20 @@ namespace clue
                             //이동
                             for (int i = 0; i < com3.getMoveCount(); i++)
                             {
+                                if(com3.goPath.Count ==0)
+                                {
+                                    break;
+                                    Console.WriteLine("도착!!!33");
+                                    Console.ReadLine();
+                                }
                                 com3.position = com3.goPath.Dequeue();
+                                //queue가 0일때 -> 장소에 도착했을때. 큐 초기화하고 -> 추리시작
                                 //맵 출력
+                                Console.SetCursorPosition(0, 0);
+
+                                Console.WriteLine("(" + user.position.Item1 + "," + user.position.Item2 + ")");
+                                Console.WriteLine(GameManager.Instance.map[user.position.Item1, user.position.Item2]);
+                                Init.viewMap(user, com1, com2, com3);
                             }
                         }
                         else
@@ -190,8 +262,20 @@ namespace clue
                             //이동
                             for (int i = 0; i < com3.getMoveCount(); i++)
                             {
+                                if (com3.goPath.Count == 0)
+                                {
+                                    break;
+                                    Console.WriteLine("도착!!!33");
+                                    Console.ReadLine();
+                                }
+
                                 com3.position = com3.goPath.Dequeue();
                                 //맵 출력
+                                Console.SetCursorPosition(0, 0);
+
+                                Console.WriteLine("(" + user.position.Item1 + "," + user.position.Item2 + ")");
+                                Console.WriteLine(GameManager.Instance.map[user.position.Item1, user.position.Item2]);
+                                Init.viewMap(user, com1, com2, com3);
                             }
                         }
                     }

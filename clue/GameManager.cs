@@ -20,29 +20,22 @@ namespace clue
         private List<Card> com2Card = new List<Card>();
         private List<Card> com3Card = new List<Card>();
 
-        public bool Running = true;
+        private List<Card> thisGuessCard = new List<Card>(); //현재 진행중인 추리 카드
 
-        public List<Card> getStartCardList(int num)
+        public bool Running = true; //게임 진행중 flag
+        private GameManager() { }
+
+        public List<Card> getStartCardList(int num) //유저 번호 -> 해당 유저 카드 목록 return
         {
             if (num == 0)
-            {
                 return userCard;
-            }
             else if (num == 1)
-            {
                 return com1Card;
-            }
             else if (num == 2)
-            {
                 return com2Card;
-            }
             else
-            {
                 return com3Card;
-            }
         }
-
-        private GameManager() { }
 
         public static GameManager Instance
         {
@@ -56,7 +49,7 @@ namespace clue
             }
         }
 
-        void settingPlayerCard()
+        void settingPlayerCard()    //전체 카드목록 각 유저에게 나누어줌
         {
             for (int i = 0; i < allCardList.Count; i++)
             {
@@ -78,19 +71,19 @@ namespace clue
             }
         }
 
-        void Shuffle<T>(List<T> list)
+        void Shuffle<T>(List<T> list)   //카드 셔플
         {
             Random rand = new Random();
-            for(int i = 0; i < list.Count; i++)
+            for (int i = 0; i < list.Count; i++)
             {
                 int j = rand.Next(i, list.Count);
                 T temp = list[i];
                 list[i] = list[j];
                 list[j] = temp;
-            }    
+            }
         }
 
-        public void StartGame()
+        public void StartGame() //게임 시작시 카드 세팅 진행
         {
             string[] cardName = new string[21]
             {
@@ -124,6 +117,7 @@ namespace clue
             {
                 num = rand.Next(0, 22);
                 Card tempCard = allCardList[num];
+                //TODO: 왜때문에 자꾸 여기서 오류가 나는걸까 죽일까
 
                 if (!corrCard.Any())
                 {
@@ -145,7 +139,6 @@ namespace clue
                     }
                 }
             }
-
             settingPlayerCard();
         }
 
@@ -166,6 +159,24 @@ namespace clue
         public void EndGame()
         {
             Running = false;
+        }
+
+        public List<Card> GetAllCard()
+        {
+            return allCardList;
+        }
+
+        public void SetGuessCard(List<Card> _guess)
+        {
+            thisGuessCard.Clear();
+            for(int i =0; i < _guess.Count; i++)
+            {
+                thisGuessCard.Add(_guess[i]);
+            }
+        }
+        public List<Card> GetGuessCard()
+        {
+            return thisGuessCard;
         }
     }
 }
