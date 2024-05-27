@@ -8,7 +8,7 @@ namespace clue
 {
     class Init
     {
-        static void setMap()
+        static void SetMap()
         {
             // 2 - 중앙홀, 3 - 식당, 4 - 부엌,  5 - 거실, 6 - 마당, 7 - 차고, 8 - 게임룸, 9 - 침실, 10 - 욕실, 11 - 서재
             
@@ -20,12 +20,12 @@ namespace clue
                 { 1 , 1 , 1 , 1 , 1 ,1 ,0 ,1 ,1 ,3 ,3 ,3 ,3 ,3 ,3 ,1 ,1 ,0 ,1 ,1 ,1 ,1 },
                 { 1 ,11 ,11 ,11 ,11 ,1 ,0 ,0 ,1 ,1 ,1 ,0 ,1 ,1 ,1 ,1 ,0 ,0 ,0 ,1 ,1 ,1 },
                 { 1 ,11 ,11 ,11 ,11 ,1 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1 ,1 ,1 },
-                { 1 ,11 ,11 ,11 ,11 ,1 ,0 ,0 ,0 ,0 ,1 ,1 ,0 ,1 ,1 ,0 ,0 ,0 ,0 ,1 ,1 ,1 },
-                { 1 ,11 ,11 ,11 ,11 ,1 ,0 ,0 ,0 ,0 ,1 ,2 ,2 ,2 ,1 ,0 ,0 ,0 ,0 ,1 ,1 ,1 },
-                { 1 ,11 ,11 ,11 ,11 ,1 ,0 ,0 ,0 ,0 ,0 ,2 ,2 ,2 ,0 ,0 ,0 ,0 ,0 ,1 ,6 ,6 },
-                { 1 ,11 ,11 ,11 ,11 ,1 ,0 ,0 ,0 ,0 ,1 ,2 ,2 ,2 ,1 ,0 ,0 ,0 ,0 ,0 ,6 ,6 },
-                { 1 , 1 , 1 , 1 , 0 ,1 ,1 ,1 ,0 ,0 ,1 ,2 ,2 ,2 ,1 ,0 ,0 ,0 ,0 ,1 ,6 ,6 },
-                { 1 ,10 ,10 , 1 , 0 ,0 ,1 ,1 ,0 ,0 ,1 ,1 ,0 ,1 ,1 ,0 ,0 ,0 ,0 ,1 ,6 ,6 },
+                { 1 ,11 ,11 ,11 ,11 ,1 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1 ,1 ,1 },
+                { 1 ,11 ,11 ,11 ,11 ,1 ,0 ,0 ,0 ,0 ,0 ,1 ,0 ,1 ,0 ,0 ,0 ,0 ,0 ,1 ,1 ,1 },
+                { 1 ,11 ,11 ,11 ,11 ,1 ,0 ,0 ,0 ,0 ,0 ,0 ,2 ,0 ,0 ,0 ,0 ,0 ,0 ,1 ,6 ,6 },
+                { 1 ,11 ,11 ,11 ,11 ,1 ,0 ,0 ,0 ,0 ,0 ,1 ,0 ,1 ,0 ,0 ,0 ,0 ,0 ,0 ,6 ,6 },
+                { 1 , 1 , 1 , 1 , 0 ,1 ,1 ,1 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1 ,6 ,6 },
+                { 1 ,10 ,10 , 1 , 0 ,0 ,1 ,1 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1 ,6 ,6 },
                 { 1 ,10 ,10 , 0 , 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1 ,1 ,1 ,1 },
                 { 1 ,10 ,10 , 1 , 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1 ,1 ,1 ,1 },
                 { 1 , 1 , 1 , 1 , 0 ,1 ,1 ,1 ,1 ,1 ,1 ,0 ,1 ,1 ,1 ,1 ,1 ,0 ,1 ,1 ,1 ,1 },
@@ -37,7 +37,7 @@ namespace clue
             };
         }
 
-        public static void viewMap(User user, Com com1, Com com2, Com com3)
+        public static void ViewMap(User user, Com com1, Com com2, Com com3)
         {
             for (int i = 0; i < 21; i++)
             {
@@ -50,25 +50,25 @@ namespace clue
                     if (user.position.Item1 == i && user.position.Item2 == j)
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
-                        Console.Write("▼");
+                        Console.Write("●");
                         Console.ResetColor();
                     }
                     else if (com1.position.Item1 == i && com1.position.Item2 == j)
                     {
                         Console.ForegroundColor = ConsoleColor.Green;
-                        Console.Write("▽");
+                        Console.Write("▼");
                         Console.ResetColor();
                     }
                     else if (com2.position.Item1 == i && com2.position.Item2 == j)
                     {
                         Console.ForegroundColor = ConsoleColor.Blue;
-                        Console.Write("▽");
+                        Console.Write("▼");
                         Console.ResetColor();
                     }
                     else if (com3.position.Item1 == i && com3.position.Item2 == j)
                     {
                         Console.ForegroundColor = ConsoleColor.Yellow;
-                        Console.Write("▽");
+                        Console.Write("▼");
                         Console.ResetColor();
                     }
                     else
@@ -140,13 +140,13 @@ namespace clue
             }
         }
 
-        void setGameState()
+        void SetGameState()
         {
             //현재 위치. 가지고있는 카드 목록
 
         }
 
-        public static void viewGameState(User user)
+        public static void ViewGameState(User user)
         {
 
             Console.WriteLine(" [현재 턴] ");
@@ -174,10 +174,10 @@ namespace clue
             Console.WriteLine("");
             Console.WriteLine(" [ 나의 카드 목록 ] ");
             Console.WriteLine("");
-            List<Card> userCard = GameManager.Instance.getStartCardList(0);
+            List<Card> userCard = GameManager.Instance.GetStartCardList(0);
             for (int i = 0; i < userCard.Count; i++)
             {
-                Console.Write($" {userCard[i].getName()} ");
+                Console.Write($" {userCard[i].GetName()} ");
             }
 
             Console.WriteLine("");
@@ -214,12 +214,13 @@ namespace clue
             #endregion
         }
 
-        void setGamePanal()
+        void SetGamePanal()
         {
             //게임 컨트롤 패널 초기화
 
         }
-        void viewGamePanel()
+
+        void ViewGamePanel()
         { 
             //할수있는 행위 목록
 
@@ -236,13 +237,13 @@ namespace clue
             }
         }
 
-        public static void gameManagerInit()
+        public static void GameManagerInit()
         {
             //gamemanager 초기화
             Console.SetWindowSize(120, 45);
             Console.SetBufferSize(120, 45);
 
-            setMap();
+            SetMap();
         }
 
     }

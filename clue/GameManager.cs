@@ -14,18 +14,46 @@ namespace clue
         private List<Card> corrCard = new List<Card>();     //정답 카드
         public int[,] map;                                  //전체 맵 세팅
         public int turn;                                    //현재 턴 (0:유저,1:com1, 2:com2, 3:com3)
-
+        private int guessUser = 0;
         private List<Card> userCard = new List<Card>();
         private List<Card> com1Card = new List<Card>();
         private List<Card> com2Card = new List<Card>();
         private List<Card> com3Card = new List<Card>();
+        private int winner;
 
         private List<Card> thisGuessCard = new List<Card>(); //현재 진행중인 추리 카드
 
         public bool Running = true; //게임 진행중 flag
-        private GameManager() { }
+        private GameManager() { 
+      
+        }
 
-        public List<Card> getStartCardList(int num) //유저 번호 -> 해당 유저 카드 목록 return
+        public void SetGuessUser(int num)
+        {
+            guessUser = num;
+        }
+
+        public void SetWinner(int num)
+        {
+            winner = num;
+        }
+
+        public int GetWinner()
+        {
+            return winner;
+        }
+
+        public int GetGuessUser()
+        {
+            return guessUser;
+        }
+
+        public List<Card> GetCorrCards()
+        {
+            return corrCard;
+        }
+
+        public List<Card> GetStartCardList(int num) //유저 번호 -> 해당 유저 카드 목록 return
         {
             if (num == 0)
                 return userCard;
@@ -49,7 +77,7 @@ namespace clue
             }
         }
 
-        void settingPlayerCard()    //전체 카드목록 각 유저에게 나누어줌
+        void SettingPlayerCard()    //전체 카드목록 각 유저에게 나누어줌
         {
             for (int i = 0; i < allCardList.Count; i++)
             {
@@ -107,7 +135,6 @@ namespace clue
                 allCardList.Add(new Card(i + 12, CardType.LOC, cardName[i + 12]));
             }   //장소카드
 
-            Random rand = new Random();
             int num;
             int checkTime = 0;
 
@@ -115,21 +142,22 @@ namespace clue
 
             while (checkTime < 3)
             {
-                num = rand.Next(0, 22);
+            Random rand = new Random();
+                num = rand.Next(0, cardName.Count());
                 Card tempCard = allCardList[num];
-                //TODO: 왜때문에 자꾸 여기서 오류가 나는걸까 죽일까
 
-                if (!corrCard.Any())
+                if (corrCard.Count == 0)
                 {
                     corrCard.Add(tempCard);
-                    allCardList.Remove(tempCard);
+                   // allCardList.Remove(tempCard);
+                   //TODO: 삭제하지말고 나중에 전체 정해지면 삭제하던지 놔두던지 확인하기
                     checkTime++;
                 }
                 else
                 {
                     for (int i = 0; i < corrCard.Count; i++)
                     {
-                        if (!corrCard[i].getCardType().Equals(tempCard.getCardType()))
+                        if (!corrCard[i].GetCardType().Equals(tempCard.GetCardType()))
                         {
                             corrCard.Add(tempCard);
                             allCardList.Remove(tempCard);
@@ -139,10 +167,10 @@ namespace clue
                     }
                 }
             }
-            settingPlayerCard();
+            SettingPlayerCard();
         }
 
-        public int rollDice() //주사위 두개 굴리기
+        public int RollDice() //주사위 두개 굴리기
         {
             int diceCount;
 

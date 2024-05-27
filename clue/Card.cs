@@ -19,12 +19,13 @@ namespace clue
             this.type = type;
             this.name = name;
         }
-        public string getName()
+
+        public string GetName()
         {
             return name;
         }
 
-        public int getLocNum()
+        public int GetLocNum()
         {
             if(this.type.Equals(CardType.LOC))
             {
@@ -72,7 +73,7 @@ namespace clue
             }
         }
 
-        public string getTypeString()
+        public string GetTypeString()
         {
             string typeName = "";
             switch (this.type)
@@ -90,10 +91,9 @@ namespace clue
             return typeName;
         }
 
-        public CardType getCardType()
+        public CardType GetCardType()
         {
             return this.type;
         }
-
     }
 }

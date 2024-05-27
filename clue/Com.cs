@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace clue
 {
@@ -16,7 +17,7 @@ namespace clue
 
         public Com(List<Card> startCard)
         {
-            addCard(startCard);
+            AddCard(startCard);
         }
 
         public bool CheckGoLocation()   //새로운 장소를 찾아야 하는지 여부
@@ -26,7 +27,7 @@ namespace clue
             {
                 for (int i = 0; i < knowLocCard.Count; i++)
                 {
-                    if (knowLocCard[i].getLocNum() == checkLoc)
+                    if (knowLocCard[i].GetLocNum().Equals(checkLoc))
                     {
                         //알고있는 정보중에 현재 가고있는 장소가 포함되면
                         return true;
@@ -36,69 +37,27 @@ namespace clue
             return check;
         }
 
-        public void AddKnowCard(List<Card> addCardList)
+        public void AddKnowCard(List<Card> addCardList) //아는 정보 저장 LIST
         {
             for (int i = 0; i < addCardList.Count; i++)
             {
-                if (addCardList[i].getCardType().Equals(CardType.LOC))
+                if (addCardList[i].GetCardType().Equals(CardType.LOC))
                     knowLocCard.Add(addCardList[i]);
-                else if(addCardList[i].getCardType().Equals(CardType.PER))
+                else if(addCardList[i].GetCardType().Equals(CardType.PER))
                     knowPerCard.Add(addCardList[i]);
                 else
                     knowWepCard.Add(addCardList[i]);
             }
         }
 
-        public void AddKnowCard(Card addCard)
+        public void AddKnowCard(Card addCard)   //아는 정보 저장 1개
         {
-            if (addCard.getCardType().Equals(CardType.LOC))
+            if (addCard.GetCardType().Equals(CardType.LOC))
                 knowLocCard.Add(addCard);
-            else if (addCard.getCardType().Equals(CardType.PER))
+            else if (addCard.GetCardType().Equals(CardType.PER))
                 knowPerCard.Add(addCard);
             else
                 knowWepCard.Add(addCard);
-        }
-
-        public bool CheckIsLoc()    //현재 위치가 장소타일인지 확인, but 2일때도 false
-        {
-            bool isLoc = false;
-            //2이면 false
-            if (GetLocByCoor(position) != 2 && GetLocByCoor(position) != -1)
-            {
-                isLoc = true;
-            }
-            return isLoc;
-        }
-
-        public int GetLocByCoor((int, int) _position) //좌표로 장소번호 return
-        {
-            if (_position == (8, 12) || _position == (9, 11) || _position == (9, 13) || _position == (11, 12))
-            {
-                return 2;
-            }
-            else
-            {
-                if (_position == (4, 11))
-                    return 3;
-                if (_position == (3, 6))
-                    return 4;
-                if (_position == (3, 17))
-                    return 5;
-                if (_position == (10, 20))
-                    return 6;
-                if (_position == (16, 17))
-                    return 7;
-                if (_position == (16, 11))
-                    return 8;
-                if (_position == (16, 4))
-                    return 9;
-                if (_position == (13, 2))
-                    return 10;
-                if (_position == (10, 4))
-                    return 11;
-                else
-                    return -1;
-            }
         }
 
         public (int, int) GetCoorByNum(int num) //장소번호로 좌표 return
@@ -160,29 +119,29 @@ namespace clue
 
         public string GetNameByCoor((int, int) _position) //좌표로 카드 명칭 반환
         {
-            if (_position == (8, 12) || _position == (9, 11) || _position == (9, 13) || _position == (11, 12))
+            if (_position.Equals((9, 12)))
             {
                 return "중앙홀";
             }
             else
             {
-                if (_position == (4, 11))
+                if (_position.Equals((4, 11)))
                     return "식당";
-                if (_position == (3, 6))
+                if ( _position.Equals((3, 6)) )
                     return "부엌";
-                if (_position == (3, 17))
+                if (_position.Equals((3, 17)) )
                     return "거실";
-                if (_position == (10, 20))
+                if (_position.Equals((10, 20)))
                     return "마당";
-                if (_position == (16, 17))
+                if (_position.Equals((16, 17)))
                     return "차고";
-                if (_position == (16, 11))
+                if (_position.Equals((16, 11)))
                     return "게임룸";
-                if (_position == (16, 4))
+                if (_position.Equals((16, 4)))
                     return "침실";
-                if (_position == (13, 2))
+                if (_position.Equals((13, 2)))
                     return "욕실";
-                if (_position == (10, 4))
+                if (_position.Equals((10, 4)))
                     return "서재";
                 else
                     return "error";
@@ -208,7 +167,7 @@ namespace clue
                 int y = current.Item2;
 
                 // 목표 지점에 도달하면 경로 반환
-                if (current == goal)
+                if (current.Equals(goal))
                 {
                     return path;
                 }
@@ -221,7 +180,7 @@ namespace clue
                     // 방문한 노드인지 확인
                     if (nx >= 0 && nx < rows && ny >= 0 && ny < cols && !visited.Contains((nx, ny)))
                     {
-                        // Skip walls
+                        // 벽이면 안찾음!
                         if (grid[nx, ny] == 1)
                             continue;
 
@@ -235,18 +194,17 @@ namespace clue
             return null; // 경로를 찾지 못한 경우
         }
 
-        public (int, int) GetRandomCoor(List<Card> _allCard)
+        public (int, int) GetRandomCoor(List<Card> _allCard)    //알고있는 장소 제외랜덤 장소 좌표 RETURN
         {
             List<Card> tempLocCard = new List<Card>();
 
-            //알고있는 장소말고 다른장소 랜덤 좌표
             for (int i = 0; i < _allCard.Count; i++)
             {
                 for (int j = 0; j < knowLocCard.Count; j++)
                 {
-                    if (_allCard[i].getCardType().Equals(CardType.LOC))
+                    if (_allCard[i].GetCardType().Equals(CardType.LOC))
                     {
-                        if (!_allCard[i].getName().Equals(knowLocCard[j].getName()))
+                        if (!_allCard[i].GetName().Equals(knowLocCard[j].GetName()))
                         {
                             tempLocCard.Add(_allCard[i]);
                         }
@@ -257,75 +215,218 @@ namespace clue
             Random rand = new Random();
             int randNum = rand.Next(0, tempLocCard.Count);
 
-            return GetCoorByNum(GetLocByName(tempLocCard[randNum].getName()));
-        }
+            return GetCoorByNum(GetLocByName(tempLocCard[randNum].GetName()));
+        }   
 
-        public void Guess( GameManager _instance)
+        public bool CheckThisKnow()
         {
-            List<Card> _allCard = _instance.GetAllCard();
-            int thisLocNum = GetLocByCoor(this.position);
+             int thisLocNum = GetLocByCoor(this.position);
             bool checkKnow = false;
             for (int i = 0; i < this.knowLocCard.Count; i++)
             {
                 //현재 장소가 아는정보인지 확인
-                //TODO:현재 장소가 아는정보면 return을 뭐로하지
-                if (thisLocNum.Equals(GetLocByName(knowLocCard[i].getName())))
+                if (thisLocNum.Equals(GetLocByName(knowLocCard[i].GetName())))
                 {
                     checkKnow = true;
                     break;
                 }
             }
-            if (!checkKnow)
+            return checkKnow;
+        }   //현재 위치 장소 아는 카드인지 확인
+
+        public void Guess( GameManager _instance)   //추리
+        {
+            List<Card> _allCard = _instance.GetAllCard();
+            int thisLocNum = GetLocByCoor(this.position);
+            
+            List<Card> unknowWepCard = new List<Card>(); //모르는 wep 카드 List
+            List<Card> unknowPerCard = new List<Card>(); //모르는 per 카드 List
+            List<Card> allKnowCard = new List<Card>();
+
+            allKnowCard = knowLocCard;
+            for(int i = 0; i < knowPerCard.Count; i++)
             {
-                List<Card> unknowWepCard = new List<Card>(); //모르는 wep 카드 List
-                List<Card> unknowPerCard = new List<Card>(); //모르는 per 카드 List
-                List<Card> allKnowCard = new List<Card>();
+                allKnowCard.Add(knowPerCard[i]);
+            }
+            for(int i = 0; i< knowWepCard.Count; i ++)
+            {
+                allKnowCard.Add(knowWepCard[i]);
+            }
 
-                allKnowCard = knowLocCard;
-                for(int i = 0; i < knowPerCard.Count; i++)
-                {
-                    allKnowCard.Add(knowPerCard[i]);
-                }
-                for(int i = 0; i< knowWepCard.Count; i ++)
-                {
-                    allKnowCard.Add(knowWepCard[i]);
-                }
+            Card thisLocCard;   //현재 위치의 장소카드
+            List<Card> newGuessCard = new List<Card>();//새로 뽑은 추리 카드
 
-                Card thisLocCard;   //현재 위치의 장소카드
-                List<Card> newGuessCard = new List<Card>();//새로 뽑은 추리 카드
-
-                for (int i = 0; i < _allCard.Count; i++)
+            for (int i = 0; i < _allCard.Count; i++)
+            {
+                for (int j = 0; j < allKnowCard.Count; j++)
                 {
-                    for (int j = 0; j < allKnowCard.Count; j++)
+                    if (!_allCard[i].Equals(allKnowCard[j].GetName()))
                     {
-                        if (!_allCard[i].Equals(allKnowCard[j].getName()))
+                        if(_allCard[i].GetCardType().Equals(CardType.PER))
                         {
-                            if(_allCard[i].getCardType().Equals(CardType.PER))
-                            {
-                                unknowPerCard.Add(_allCard[i]);
-                            }
-                            else if(_allCard[i].getCardType().Equals(CardType.WEP))
-                            {
-                                unknowWepCard.Add(_allCard[i]);
-                            }
+                            unknowPerCard.Add(_allCard[i]);
+                        }
+                        else if(_allCard[i].GetCardType().Equals(CardType.WEP))
+                        {
+                            unknowWepCard.Add(_allCard[i]);
                         }
                     }
-                    if(_allCard[i].getName().Equals(GetNameByCoor(this.position)))
+                }
+                if(_allCard[i].GetName().Equals(GetNameByCoor(this.position)))
+                {
+                    thisLocCard = _allCard[i];
+                    newGuessCard.Add(thisLocCard);
+                }
+            }
+
+            Random rand = new Random();
+            int wepNum = rand.Next(0, unknowWepCard.Count);
+            int perNum = rand.Next(0, unknowPerCard.Count);
+
+            newGuessCard.Add(unknowWepCard[wepNum]);
+            newGuessCard.Add(unknowPerCard[perNum]);
+
+            _instance.SetGuessCard(newGuessCard);
+        }
+
+        public bool Prove( GameManager _instance)   //증명할수 있는지 체크
+        {
+            bool isProov = false;
+            List<Card> guessCardList = _instance.GetGuessCard();
+            List<Card> thisCardList = GetCardList();
+
+            //컴퓨터 증명
+            //가지고있는 카드가 guess카드에 1개 이상있으면
+            for(int i=0; i <  thisCardList.Count ; i++ )
+            {
+                for(int j = 0; j < guessCardList.Count ; j++)
+                {
+                    if(thisCardList[i].Equals(guessCardList[j]))
+                        isProov = true;
+                }
+            }
+            return isProov;
+        }
+
+        public Card GetProvCard(GameManager _instance)  //증명할 카드
+        {
+            List<Card> guessCardList = _instance.GetGuessCard();
+            List<Card> thisCardList = GetCardList();
+            List<Card> sameCardList = new List<Card>();
+
+            for(int i=0; i <  thisCardList.Count ; i++ )
+            {
+                for(int j = 0; j < guessCardList.Count ; j++)
+                {
+                    if(thisCardList[i].Equals(guessCardList[j]))
+                        sameCardList.Add(thisCardList[i]);
+                }
+            }
+
+            Random rand = new Random();
+            int num = rand.Next(0, sameCardList.Count);
+
+            return sameCardList[num];
+        }
+
+        public bool CheckCanFinal() //최종 추리 가능한지 여부 (아는 카드 각 2개 이하)
+        {
+            bool canFinal = false;
+            if(knowLocCard.Count <= 2)
+            {
+                if(knowPerCard.Count <=2)
+                {
+                    if(knowWepCard.Count <=2)
                     {
-                        thisLocCard = _allCard[i];
-                        newGuessCard.Add(thisLocCard);
+                        canFinal = true;
                     }
                 }
+            }
+            return canFinal;
+        }
 
-                Random rand = new Random();
-                int wepNum = rand.Next(0, unknowWepCard.Count);
-                int perNum = rand.Next(0, unknowPerCard.Count);
+        public void ComMove(GameManager _instance, User user, Com com1, Com com2, Com com3)
+        { 
+            for (int i = 0; i < this.GetMoveCount(); i++)
+            {
+                if (this.goPath.Count == 0)
+                {
+                    break;
+                    //도착하면 멈춤
+                }
 
-                newGuessCard.Add(unknowWepCard[wepNum]);
-                newGuessCard.Add(unknowPerCard[perNum]);
+                this.position = this.goPath.Dequeue();
+                //맵 출력
+                Console.SetCursorPosition(0, 0);
+                Thread.Sleep(300);
 
-                _instance.SetGuessCard(newGuessCard);
+                Console.WriteLine("(" + this.position.Item1 + "," + this.position.Item2 + ")");
+                Console.WriteLine(_instance.map[this.position.Item1, this.position.Item2]);
+                Init.ViewMap(user, com1, com2, com3);
             }
         }
+
+        public List<Card> FinalGuess(GameManager _instance)//최종추리카드 return
+        {
+            List<Card> finalCard = new List<Card>();   
+            List<Card> tempAllCard = _instance.GetAllCard();
+
+            for(int i = 0; i < tempAllCard.Count; i++)
+            {
+                if(tempAllCard[i].GetType().Equals(CardType.LOC))
+                {
+                    for(int j =0; j < knowLocCard.Count; j++)
+                    {
+                        if(!(tempAllCard[i].Equals(knowLocCard[j])))
+                        {
+                            finalCard.Add(tempAllCard[i]);
+                        }
+                    }
+                }
+                else if(tempAllCard[i].GetType().Equals(CardType.PER))
+                {
+                    for(int j = 0; j < knowPerCard.Count; j++)
+                    {
+                        if(!(tempAllCard[i].Equals(knowPerCard[j])))
+                        {
+                            finalCard.Add(tempAllCard[i]);
+                        }
+                    }
+                }
+                else
+                {
+                    for(int j=0; j< knowWepCard.Count; j++)
+                    {
+                        if(! (tempAllCard[i].Equals(knowWepCard[j])))
+                        {
+                            finalCard.Add(tempAllCard[i]);
+                        }
+                    }
+                }
+            }
+            
+            return finalCard;
+        }   
+
+        public int CheckFinalGuess(GameManager _instance, List<Card> fCards)    //맞은 갯수 return
+        {
+            List<Card> corrCard = _instance.GetCorrCards();
+
+            int checkCorrect = 0;
+
+            for(int i =0; i<corrCard.Count; i++)
+            {
+                for(int j = 0; j <fCards.Count; j++)
+                {
+                    if(corrCard[i].Equals(fCards[j]))
+                    {
+                        checkCorrect++;
+                    }
+                }
+            }
+
+            return checkCorrect;
+        }
+
     }
 }

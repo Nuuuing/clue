@@ -3,290 +3,233 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace clue
 {
     class Program
     {
-        //TODO: 메소드 명명 수정하기 
-
         static void Main(string[] args)
         {
-            Init.gameManagerInit();
+            Init.GameManagerInit();
 
             GameManager gm = GameManager.Instance;
             gm.StartGame();
 
-            User user = new User(gm.getStartCardList(0));
-            Com com1 = new Com(gm.getStartCardList(1));
-            Com com2 = new Com(gm.getStartCardList(2));
-            Com com3 = new Com(gm.getStartCardList(3));
+            User user = new User(gm.GetStartCardList(0));
+            Com com1 = new Com(gm.GetStartCardList(1));
+            Com com2 = new Com(gm.GetStartCardList(2));
+            Com com3 = new Com(gm.GetStartCardList(3));
             //카드 나누어주기
-            com1.AddKnowCard(com1.getCardList());
-            com2.AddKnowCard(com2.getCardList());
-            com3.AddKnowCard(com3.getCardList());
+            com1.AddKnowCard(com1.GetCardList());
+            com2.AddKnowCard(com2.GetCardList());
+            com3.AddKnowCard(com3.GetCardList());
             //알고있는 카드 정보에 처음 뽑은 카드 정보 넣기
 
-            //Init.viewGameState(user);
-            //user.getCardList();
+            //Init.viewGameState(user); // 게임 상태 
+            //user.getCardList();   //유저 카드 리스트
 
             while (gm.Running)
             {
                 if (gm.turn == 0)
                 {
-                    if (user.getAlive())
+                    if (user.GetAlive())
                     { //살아있으면 움직임 계속
-                      //유저 턴
+                        //TODO: UI 설정
 
-                        user.setMoveCount(gm.rollDice());   //주사위
+                        //현재 위치가 장소인지 체크 
+                        //TODO: 유저 이동한 위치도 가운데 아니고 바로 방문앞....으로해서..?? LOCATION 체크 혹은 멈추는 위치도 LOCATION에 추가하기
 
-                        //메뉴 선택
-                        //1. 이동 2. 추리
-
-                        ConsoleKey key;
-                        while (user.getMoveCount() > 0)
+                        if (user.CheckComPosMiddle())   //중앙에 있는지 확인
                         {
-                            Console.SetCursorPosition(0, 0);
-
-                            Console.WriteLine("(" + user.position.Item1 + "," + user.position.Item2 + ")");
-                            Console.WriteLine(user.getMoveCount());
-                            Init.viewMap(user, com1, com2, com3);
-
-                            key = Console.ReadKey(true).Key;
-
-                            switch (key)
+                            //최종 추리 할건지 이동할건지 메뉴
+                            //최종 추리시
+                            //카드 3개 선택
+                        }
+                        else
+                        {
+                              if(user.CheckIsLoc()) //true -> 현재 장소 타일 위에 
                             {
-                                case ConsoleKey.LeftArrow:
-                                    user.move(MoveDir.LEFT);
-                                    break;
-                                case ConsoleKey.RightArrow:
-                                    user.move(MoveDir.RIGHT);
-                                    break;
-                                case ConsoleKey.UpArrow:
-                                    user.move(MoveDir.TOP);
-                                    break;
-                                case ConsoleKey.DownArrow:
-                                    user.move(MoveDir.BOTTOM);
-                                    break;
+                                //TODO: 유저 장소타일 위치 다른거 체크해야함
+                                //추리할건지 아니면 이동할건지 선택
+                            }
+                            else
+                            {
+                                //이동하기 메뉴
+                                user.SetUserMove(true);
                             }
                         }
 
+                        if(user.GetUserMove())
+                        {
+                            user.SetMoveCount(gm.RollDice());   //주사위
+
+                            ConsoleKey key;
+                            while (user.GetMoveCount() > 0)
+                            {
+                                Console.SetCursorPosition(0, 0);
+
+                                Console.WriteLine("(" + user.position.Item1 + "," + user.position.Item2 + ")");
+                                Console.WriteLine(user.GetMoveCount());
+                                Init.ViewMap(user, com1, com2, com3);
+
+                                key = Console.ReadKey(true).Key;
+
+                                //TODO: 키보드 움직이지말고 메뉴 선택지로 움직이기 -> 메뉴 만들면 수정하기
+                                switch (key)
+                                {
+                                    case ConsoleKey.LeftArrow:
+                                        user.Move(MoveDir.LEFT);
+                                        break;
+                                    case ConsoleKey.RightArrow:
+                                        user.Move(MoveDir.RIGHT);
+                                        break;
+                                    case ConsoleKey.UpArrow:
+                                        user.Move(MoveDir.TOP);
+                                        break;
+                                    case ConsoleKey.DownArrow:
+                                        user.Move(MoveDir.BOTTOM);
+                                        break;
+                                    case ConsoleKey.Q:
+                                        //Q키 누를때 스탑 or enter
+                                        break;
+                                }
+                            }
+                        }
                     }
+                    user.SetUserMove(false);
                     gm.turn++;
                 }
                 else if (gm.turn == 1)
                 {
-                    if (com1.getAlive())    //살아있는지 여부
+                    if (com1.GetAlive())    //살아있는지 여부
                     {
-                        com1.setMoveCount(gm.rollDice());   //주사위
-
-                        if (com1.CheckIsLoc())
+                        if(com1.CheckCanFinal())    //최종 추리 가능한지 확인
                         {
-                            //현재 장소가 장소인지 체크
-                            //TODO: 추리하기
-                            //현재위치 번호를 저장하고 문구띄우기 -> ~~가 ~~로 추리했습니다.
-
-                            //TODO: 추리 할 필요가 없는 장소인지 체크하고, 추리 해야할 장소면 추리 진행
-                            com1.Guess(gm); //추리할카드 저장
-                            //com2 증명
-                            //com3 증명
-                            //user 증명
-                            //TODO: 증명추가하기
-                        }
-                        else
-                        {
-                            if (com1.CheckGoLocation() == true)
+                            if(com1.CheckComPosMiddle())
                             {
+                                List<Card> finalCards = com1.FinalGuess(gm);
+                                 int corrNum = com1.CheckFinalGuess(gm,finalCards);
 
-                                //밑에 메소드 다 분리하기
-                                //다시 경로 탐색 true
-                                //TODO: 랜덤으로 장소 좌표 넣기 -> 체크하기
-                                List<(int, int)> path = com1.FindShortestPath(gm.map, com1.position, com1.GetRandomCoor(gm.GetAllCard()));
-                                com1.goPath.Clear();
-                                if (path != null)
+                                if(corrNum ==3)
                                 {
-                                    for (int i = 0; i < path.Count; i++)
-                                    {   //가고있는 경로 큐에 담음
-                                        com1.goPath.Enqueue(path[i]);
-                                    }
+                                    gm.SetWinner(1);
+                                    gm.EndGame();
+                                    break;
                                 }
                                 else
                                 {
-                                    Console.WriteLine("Path not found");
-                                }
-                                //이동
-                                for (int i = 0; i < com1.getMoveCount(); i++)
-                                {
-                                    if (com1.goPath.Count == 0)
-                                    {
-                                        break;
-                                    }
-                                    com1.position = com1.goPath.Dequeue();
-                                    //맵 출력
-                                    Console.SetCursorPosition(0, 0);
-
-                                    Console.WriteLine("(" + user.position.Item1 + "," + user.position.Item2 + ")");
-                                    Console.WriteLine(GameManager.Instance.map[user.position.Item1, user.position.Item2]);
-                                    Init.viewMap(user, com1, com2, com3);
+                                    com1.SetDie();
+                                    //TODO: 맞은갯수 반환
                                 }
                             }
                             else
                             {
-                                //이동
-                                for (int i = 0; i < com1.getMoveCount(); i++)
-                                {
-                                    if (com1.goPath.Count == 0)
+                                //2번(중앙홀로) 이동하기
+                                List<(int, int)> path = com1.FindShortestPath(gm.map, com1.position, (9,12));
+                                    com1.goPath.Clear();
+                                    if (path != null)
                                     {
-                                        break;
+                                        for (int i = 0; i < path.Count; i++)
+                                        {   //가고있는 경로 큐에 담음
+                                            com1.goPath.Enqueue(path[i]);
+                                        }
                                     }
-                                    com1.position = com1.goPath.Dequeue();
-                                    //맵 출력
-                                    Console.SetCursorPosition(0, 0);
+                                    com1.ComMove(gm ,user, com1, com2, com3 );
+                            }
+                        }
+                        else
+                        {
+                            if (com1.CheckIsLoc())//현재 장소가 장소인지 체크
+                            {
+                                if(!com1.CheckThisKnow())   //현재 장소가 이미 알고있는 카드가 아니면
+                                {
+                                    com1.Guess(gm); //추리할카드 저장
+                                    gm.SetGuessUser(1);
+                                    //TODO: 현재위치 번호를 저장하고 문구띄우기 -> ~~가 ~~로 추리했습니다.
+                                }
 
-                                    Console.WriteLine("(" + user.position.Item1 + "," + user.position.Item2 + ")");
-                                    Console.WriteLine(GameManager.Instance.map[user.position.Item1, user.position.Item2]);
-                                    Init.viewMap(user, com1, com2, com3);
+                                if(gm.GetGuessUser() == 1)  //현재 추리중인 유저가 1이면
+                                {
+                                    if(com2.Prove(gm))
+                                    { 
+                                        //com2 증명
+                                        Card provCard = com2.GetProvCard(gm);
+                                        //TODO: 증명하고 ~~가 증명했습니다. 문구 alert
+                                    }
+                                    else
+                                    {
+                                        //TODO: com1 증명 못함 => 다음사람이 증명합니다 alert
+                                        if(com3.Prove(gm))
+                                        {
+                                            //com3 증명
+                                            Card provCard = com3.GetProvCard(gm);
+                                            //TODO: 증명하고 ~~가 증명했습니다. 문구 alert 
+                                        }
+                                        else
+                                        {
+                                            //TODO: com2 증명 못함 => 다음사람이 증명합니다 alert
+                                            {
+                                                //user 증명
+                                                //TODO: 증명추가하기   
+                                                //TODO: 유저도 증명못하면 모두 증명 못했음 ALERT
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            else
+                            {   //현재 위치가 장소가 아닐때
+                                com1.SetMoveCount(gm.RollDice());   //주사위 굴리기
+                                if (com1.CheckGoLocation()) //새로운 장소를 찾아야하는지 여부
+                                {
+                                    List<(int, int)> path = com1.FindShortestPath(gm.map, com1.position, com1.GetRandomCoor(gm.GetAllCard()));
+                                    com1.goPath.Clear();
+                                    if (path != null)
+                                    {
+                                        for (int i = 0; i < path.Count; i++)
+                                        {   //가고있는 경로 큐에 담음
+                                            com1.goPath.Enqueue(path[i]);
+                                        }
+                                    }
+                                    com1.ComMove(gm ,user, com1, com2, com3 );
+                                }
+                                else
+                                {
+                                    com1.ComMove(gm ,user, com1, com2, com3 );
                                 }
                             }
                         }
                     }
+                    gm.SetGuessUser(-1);    //현재 추리중인 유저 초기화
+                    Console.ReadLine();
                     gm.turn++;
                 }
                 else if (gm.turn == 2)
                 {
-                    if (com2.getAlive())
-                    {
-                        com2.setMoveCount(gm.rollDice());   //주사위
-
-                        if (com2.CheckIsLoc())
-                        {
-                            com2.Guess(gm); //추리할카드 저장
-                        }
-                        else
-                        {
-                            if (com2.CheckGoLocation() == true)
-                            {
-                                //다시 경로 탐색 true
-                                List<(int, int)> path = com2.FindShortestPath(gm.map, com2.position, (4, 6));
-                                com2.goPath.Clear();
-                                if (path != null)
-                                {
-                                    for (int i = 0; i < path.Count; i++)
-                                    {   //가고있는 경로 큐에 담음
-                                        com2.goPath.Enqueue(path[i]);
-                                    }
-                                }
-                                else
-                                {
-                                    Console.WriteLine("Path not found2");
-                                }
-                                //이동
-                                for (int i = 0; i < com2.getMoveCount(); i++)
-                                {
-                                    if (com2.goPath.Count == 0)
-                                    {
-                                        break;
-                                    }
-                                    com2.position = com2.goPath.Dequeue();
-                                    //맵 출력
-                                    Console.SetCursorPosition(0, 0);
-
-                                    Console.WriteLine("(" + user.position.Item1 + "," + user.position.Item2 + ")");
-                                    Console.WriteLine(GameManager.Instance.map[user.position.Item1, user.position.Item2]);
-                                    Init.viewMap(user, com1, com2, com3);
-                                }
-                            }
-                            else
-                            {
-                                //이동
-                                for (int i = 0; i < com2.getMoveCount(); i++)
-                                {
-                                    if (com2.goPath.Count == 0)
-                                    {
-                                        break;
-                                    }
-                                    com2.position = com2.goPath.Dequeue();
-                                    //맵 출력
-                                    Console.SetCursorPosition(0, 0);
-
-                                    Console.WriteLine("(" + user.position.Item1 + "," + user.position.Item2 + ")");
-                                    Console.WriteLine(GameManager.Instance.map[user.position.Item1, user.position.Item2]);
-                                    Init.viewMap(user, com1, com2, com3);
-                                }
-                            }
-
-                        }
-                    }
                     gm.turn++;
                 }
                 else
                 {
-                    if (com3.getAlive())
-                    {
-                        com3.setMoveCount(gm.rollDice());   //주사위
-
-                        if (com2.CheckIsLoc())
-                        {
-                            com2.Guess(gm); //추리할카드 저장
-                        }
-                        else
-                        {
-                            if (com3.CheckGoLocation() == true)
-                            {
-                                //다시 경로 탐색 true
-                                List<(int, int)> path = com3.FindShortestPath(gm.map, com3.position, (4, 6));
-                                com3.goPath.Clear();
-                                if (path != null)
-                                {
-                                    for (int i = 0; i < path.Count; i++)
-                                    {   //가고있는 경로 큐에 담음
-                                        com3.goPath.Enqueue(path[i]);
-                                    }
-                                }
-                                else
-                                {
-                                    Console.WriteLine("Path not found2");
-                                }
-                                //이동
-                                for (int i = 0; i < com3.getMoveCount(); i++)
-                                {
-                                    if (com3.goPath.Count == 0)
-                                    {
-                                        break;
-                                    }
-                                    com3.position = com3.goPath.Dequeue();
-                                    //queue가 0일때 -> 장소에 도착했을때. 큐 초기화하고 -> 추리시작
-                                    //맵 출력
-                                    Console.SetCursorPosition(0, 0);
-
-                                    Console.WriteLine("(" + user.position.Item1 + "," + user.position.Item2 + ")");
-                                    Console.WriteLine(GameManager.Instance.map[user.position.Item1, user.position.Item2]);
-                                    Init.viewMap(user, com1, com2, com3);
-                                }
-                            }
-                            else
-                            {
-                                //이동
-                                for (int i = 0; i < com3.getMoveCount(); i++)
-                                {
-                                    if (com3.goPath.Count == 0)
-                                    {
-                                        break;
-                                    }
-
-                                    com3.position = com3.goPath.Dequeue();
-                                    //맵 출력
-                                    Console.SetCursorPosition(0, 0);
-
-                                    Console.WriteLine("(" + user.position.Item1 + "," + user.position.Item2 + ")");
-                                    Console.WriteLine(GameManager.Instance.map[user.position.Item1, user.position.Item2]);
-                                    Init.viewMap(user, com1, com2, com3);
-                                }
-                            }
-                        }
-                    }
                     gm.turn = 0;
                 }
+            }
+
+            if(gm.GetWinner() == 0)
+            {
+                //유저 우승
+            }
+            else if(gm.GetWinner() == 1)
+            {
+                   //com1 우승
+            }
+            else if(gm.GetWinner() == 2)
+            {
+                //com2 우승
+            }
+            else
+            {
+                //com3 우승
             }
         }
     }
