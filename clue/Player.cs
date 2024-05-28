@@ -11,7 +11,7 @@ namespace clue
         int moveCount = 0;                      //이동 가능 칸수
         bool isAlive = true;
         List<Card> cardList = new List<Card>(); //소지 카드 목록
-        public (int, int) position = (9, 12);   //현재 위치값, y: 9, x: 12에서 시작
+        public (int, int) position = (9, 11);   //현재 위치값, y: 9, x: 11에서 시작
 
         public void AddCard(List<Card> addCardList)
         {
@@ -33,33 +33,28 @@ namespace clue
         
         public int GetLocByCoor((int, int) _position) //좌표로 장소번호 return
         {
-            if (_position == (8, 12) || _position == (9, 11) || _position == (9, 13) || _position == (11, 12) || _position == (9, 12))
-            {
+            if (_position == (9,11))
                 return 2;
-            }
+            else if (_position == (4, 11))
+                return 3;
+            else if (_position == (3, 6))
+                return 4;
+            else if (_position == (3, 17))
+                return 5;
+            else if (_position == (10, 20))
+                return 6;
+            else if (_position == (16, 17))
+                return 7;
+            else if (_position == (16, 11))
+                return 8;
+            else if (_position == (16, 4))
+                return 9;
+            else if (_position == (13, 2))
+                return 10;
+            else if (_position == (10, 4))
+                return 11;
             else
-            {
-                if (_position == (4, 11))
-                    return 3;
-                if (_position == (3, 6))
-                    return 4;
-                if (_position == (3, 17))
-                    return 5;
-                if (_position == (10, 20))
-                    return 6;
-                if (_position == (16, 17))
-                    return 7;
-                if (_position == (16, 11))
-                    return 8;
-                if (_position == (16, 4))
-                    return 9;
-                if (_position == (13, 2))
-                    return 10;
-                if (_position == (10, 4))
-                    return 11;
-                else
-                    return 0;
-            }
+                return 0;
         }
 
          public bool CheckComPosMiddle()
@@ -78,6 +73,25 @@ namespace clue
                 isLoc = true;
             }
             return isLoc;
+        }
+        public void ViewUserState(bool isMove )
+        {
+                Console.SetCursorPosition(60, 20);
+                for (int i = 0; i < 55; i++)
+                {
+                    Console.Write("-");
+                }
+            if (isMove)
+            {
+                Console.SetCursorPosition(75, 22);
+
+                Console.WriteLine($" [ 이동가능 칸 수 : {this.GetMoveCount()} ] ");
+            }
+            else
+            {
+                Console.SetCursorPosition(75, 22);
+                Console.WriteLine("                         ");
+            }
         }
 
         public bool CheckProov()

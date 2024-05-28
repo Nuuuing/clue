@@ -62,33 +62,28 @@ namespace clue
 
         public (int, int) GetCoorByNum(int num) //장소번호로 좌표 return
         {
-            if (num != 2) //2는 4방향
-            {
-                if (num == 3)
-                    return (4, 11);
-                else if (num == 4)
-                    return (3, 6);
-                else if (num == 5)
-                    return (3, 17);
-                else if (num == 6)
-                    return (10, 20);
-                else if (num == 7)
-                    return (16, 17);
-                else if (num == 8)
-                    return (16, 11);
-                else if (num == 9)
-                    return (16, 4);
-                else if (num == 10)
-                    return (13, 2);
-                else if (num == 11)
-                    return (10, 4);
-                else
-                    return (0, 0);
-            }
+            if (num == 2)
+                return (9, 11);
+            else if (num == 3)
+                return (4, 11);
+            else if (num == 4)
+                return (3, 6);
+            else if (num == 5)
+                return (3, 17);
+            else if (num == 6)
+                return (10, 20);
+            else if (num == 7)
+                return (16, 17);
+            else if (num == 8)
+                return (16, 11);
+            else if (num == 9)
+                return (16, 4);
+            else if (num == 10)
+                return (13, 2);
+            else if (num == 11)
+                return (10, 4);
             else
-            {
                 return (0, 0);
-            }
         }
 
         public int GetLocByName(string locName) //장소 명칭으로 장소번호 return
@@ -119,33 +114,28 @@ namespace clue
 
         public string GetNameByCoor((int, int) _position) //좌표로 카드 명칭 반환
         {
-            if (_position.Equals((9, 12)))
-            {
+            if (_position.Equals((9, 11)))
                 return "중앙홀";
-            }
+            else if (_position.Equals((4, 11)))
+                return "식당";
+            else if  ( _position.Equals((3, 6)) )
+                return "부엌";
+            else if  (_position.Equals((3, 17)) )
+                return "거실";
+            else if  (_position.Equals((10, 20)))
+                return "마당";
+            else if  (_position.Equals((16, 17)))
+                return "차고";
+            else if  (_position.Equals((16, 11)))
+                return "게임룸";
+            else if  (_position.Equals((16, 4)))
+                return "침실";
+            else if  (_position.Equals((13, 2)))
+                return "욕실";
+            else if  (_position.Equals((10, 4)))
+                return "서재";
             else
-            {
-                if (_position.Equals((4, 11)))
-                    return "식당";
-                if ( _position.Equals((3, 6)) )
-                    return "부엌";
-                if (_position.Equals((3, 17)) )
-                    return "거실";
-                if (_position.Equals((10, 20)))
-                    return "마당";
-                if (_position.Equals((16, 17)))
-                    return "차고";
-                if (_position.Equals((16, 11)))
-                    return "게임룸";
-                if (_position.Equals((16, 4)))
-                    return "침실";
-                if (_position.Equals((13, 2)))
-                    return "욕실";
-                if (_position.Equals((10, 4)))
-                    return "서재";
-                else
-                    return "error";
-            }
+                return "error";
         }
 
         public List<(int, int)> FindShortestPath(int[,] grid, (int, int) start, (int, int) goal)
@@ -346,8 +336,9 @@ namespace clue
         }
 
         public void ComMove(GameManager _instance, User user, Com com1, Com com2, Com com3)
-        { 
-            for (int i = 0; i < this.GetMoveCount(); i++)
+        {
+            int mvCount = this.GetMoveCount();
+            for (int i = 0; i < mvCount ; i++)
             {
                 if (this.goPath.Count == 0)
                 {
@@ -360,13 +351,14 @@ namespace clue
                 Console.SetCursorPosition(0, 0);
                 Thread.Sleep(300);
 
-                Console.WriteLine("(" + this.position.Item1 + "," + this.position.Item2 + ")");
-                Console.WriteLine(_instance.map[this.position.Item1, this.position.Item2]);
                 Init.ViewMap(user, com1, com2, com3);
+                _instance.ViewRoomLabel();
+                //this.SetMoveCount(this.GetMoveCount() - 1);
+                //this.ViewUserState(true);
             }
         }
 
-        public List<Card> FinalGuess(GameManager _instance)//최종추리카드 return
+        public List<Card> FinalGuess(GameManager _instance) //최종추리카드 return
         {
             List<Card> finalCard = new List<Card>();   
             List<Card> tempAllCard = _instance.GetAllCard();

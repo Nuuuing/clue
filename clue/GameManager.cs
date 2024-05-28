@@ -112,7 +112,7 @@ namespace clue
             {
                 Console.WriteLine(" [ SYSTEM ] ");
             }
-             else if(typeFlag == 1)
+             else if(typeFlag == 1) //warning
             {
                 Console.BackgroundColor = ConsoleColor.Red;
                 Console.ForegroundColor = ConsoleColor.White;
@@ -141,36 +141,74 @@ namespace clue
 
         public void ViewMenu( int menuFlag )
         {
-            Console.SetCursorPosition(86, 28);
-            Console.WriteLine(" [ MENU ] ");
-
             if(menuFlag ==1)    //2번에 위치했을때
-            {   
-                Console.SetCursorPosition(88, 31);
-                Console.WriteLine(" 이동하기 ");
-                Console.SetCursorPosition(88, 33);
-                Console.WriteLine(" 최종추리하기 ");
+            {
+                Console.SetCursorPosition(86, 27);
+                Console.BackgroundColor = ConsoleColor.Blue;
+                Console.WriteLine(" [ MENU ] ");
+                Console.ResetColor();
+                Console.SetCursorPosition(88, 30);
+                Console.WriteLine(" 이동하기       ");
+                Console.SetCursorPosition(88, 32);
+                Console.WriteLine(" 최종추리하기      ");
                 }
             else if(menuFlag ==2) // 0번에 위치했을때
-            { 
-                Console.SetCursorPosition(88, 31);
-                Console.WriteLine(" 이동하기 ");
-                Console.SetCursorPosition(88, 33);
-                Console.WriteLine(" 추리하기 ");
+            {
+                Console.SetCursorPosition(86, 27);
+                Console.BackgroundColor = ConsoleColor.Blue;
+                Console.WriteLine(" [ MENU ] ");
+                Console.ResetColor();
+                Console.SetCursorPosition(88, 30);
+                Console.WriteLine(" 이동하기        ");
+                Console.SetCursorPosition(88, 32);
+                Console.WriteLine(" 추리하기       ");
             }
             else if(menuFlag ==3)
             {
-                Console.SetCursorPosition(88, 31);
-                Console.WriteLine(" ");
-
-                Console.WriteLine(" 왼쪽 ");
+                Console.SetCursorPosition(86, 27);
+                Console.BackgroundColor = ConsoleColor.Blue;
+                Console.WriteLine(" [ MENU ] ");
+                Console.ResetColor();
+                Console.SetCursorPosition(88, 30);
+                Console.WriteLine(" 위쪽       ");
+                Console.SetCursorPosition(88, 32);
+                Console.WriteLine(" 아래쪽       ");
+                Console.SetCursorPosition(88, 34);
+                Console.WriteLine(" 왼쪽         ");
+                Console.SetCursorPosition(88, 36);
+                Console.WriteLine(" 오른쪽        ");                
+            }
+            else if(menuFlag ==4)
+            {
+                Console.SetCursorPosition(86, 27);
+                Console.BackgroundColor = ConsoleColor.Blue;
+                Console.WriteLine(" [ MENU ] ");
+                Console.ResetColor();
+                Console.SetCursorPosition(88, 30);
+                Console.WriteLine(" 이동하기       ");
+            }
+            else if(menuFlag == 5)
+            {
+                Console.SetCursorPosition(86, 27);
+                Console.BackgroundColor = ConsoleColor.Blue;
+                Console.WriteLine(" [ MENU ] ");
+                Console.ResetColor();
+                Console.SetCursorPosition(88, 30);
+                Console.WriteLine(" 주사위 굴리기     ");
             }
             else
             {
-                Console.SetCursorPosition(88, 31);
-                Console.WriteLine(" 이동하기 ");
+                Console.SetCursorPosition(85, 27);
+                Console.WriteLine("               ");
+                Console.SetCursorPosition(85, 30);
+                Console.WriteLine("               ");
+                Console.SetCursorPosition(85, 32);
+                Console.WriteLine("               ");
+                Console.SetCursorPosition(85, 34);
+                Console.WriteLine("               ");
+                Console.SetCursorPosition(85, 36);
+                Console.WriteLine("               ");
             }
-
             Console.WriteLine("");
         }
 
@@ -346,9 +384,170 @@ namespace clue
             }
         }
 
-        public void ChooseUserMenu()
+        void viewCursor(int menuFlag , int thisCursor)
         {
+            if(menuFlag == 3)
+            {
+                if(thisCursor ==0)
+                {
+                    Console.SetCursorPosition(86, 30);
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.Write(" ► ");
+                    Console.SetCursorPosition(86, 32);
+                    Console.Write("   ");
+                    Console.SetCursorPosition(86, 34);
+                    Console.Write("   ");
+                    Console.SetCursorPosition(86, 36);
+                    Console.Write("   ");
+                }
+                else if(thisCursor ==1)
+                {
+                    Console.SetCursorPosition(86, 30);
+                    Console.Write("   ");
+                    Console.SetCursorPosition(86, 32);
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.Write(" ► ");
+                    Console.SetCursorPosition(86, 34);
+                    Console.Write("   ");
+                    Console.SetCursorPosition(86, 36);
+                    Console.Write("   ");
+                }
+                else if(thisCursor == 2)
+                {
+                    Console.SetCursorPosition(86, 30);
+                    Console.Write("   ");
+                    Console.SetCursorPosition(86, 32);
+                    Console.Write("   ");
+                    Console.SetCursorPosition(86, 34);
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.Write(" ► ");
+                    Console.SetCursorPosition(86, 36);
+                    Console.Write("   ");
+                }
+                else
+                {
+                    Console.SetCursorPosition(86, 30);
+                    Console.Write("   ");
+                    Console.SetCursorPosition(86, 32);
+                    Console.Write("   ");
+                    Console.SetCursorPosition(86, 34);
+                    Console.Write("   ");
+                    Console.SetCursorPosition(86, 36);
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.Write(" ► ");
+                }
+            }
+            else if(menuFlag == 1 || menuFlag ==2 )
+            {
+                if (thisCursor == 0)
+                {
+                    Console.SetCursorPosition(86, 30);
+                    Console.Write(" ► ");
+                    Console.SetCursorPosition(86, 32);
+                    Console.Write("   ");
+                }
+                else
+                {
+                    Console.SetCursorPosition(86, 30);
+                    Console.Write("   ");
+                    Console.SetCursorPosition(86, 32);
+                    Console.Write(" ► ");
+                }
+            }
+            else if(menuFlag == 4 || menuFlag == 5)
+            {
+                Console.SetCursorPosition(86, 30);
+                Console.Write(" ► ");
+            }
+        }
+        public int ChooseUserMenu(int menuFlag, int defaultNum = 0)
+        {
+            int menuNum = 0;
+            menuNum = defaultNum;
+            ConsoleKey key;
 
+            if (menuFlag == 3)
+            {
+                bool returnTrue = false;
+
+                while (true)
+                {
+                    viewCursor(menuFlag, menuNum);
+                    key = Console.ReadKey(true).Key;
+
+                    switch (key)
+                    {
+                        case ConsoleKey.UpArrow:
+                            if (menuNum == 0) menuNum=3;
+                            else menuNum--;
+                            break;
+                        case ConsoleKey.DownArrow:
+                            if (menuNum == 3) menuNum = 0;
+                            else menuNum++;
+                            break;
+                        case ConsoleKey.Enter:
+                            returnTrue = true;
+                            break;
+                    }
+
+                   if(returnTrue)
+                    {
+                        break;
+                    }
+                }
+            }
+            else if(menuFlag == 1 || menuFlag == 2)
+            {
+                bool returnTrue = false;
+
+                while (true)
+                {
+                    viewCursor(menuFlag, menuNum);
+                    key = Console.ReadKey(true).Key;
+
+                    switch (key)
+                    {
+                        case ConsoleKey.UpArrow:
+                            if (menuNum == 0) menuNum = 1;
+                            else menuNum--;
+                            break;
+                        case ConsoleKey.DownArrow:
+                            if (menuNum == 1) menuNum = 0;
+                            else menuNum++;
+                            break;
+                        case ConsoleKey.Enter:
+                            returnTrue = true;
+                            break;
+                    }
+
+                    if (returnTrue)
+                    {
+                        break;
+                    }
+                }
+            }else if( menuFlag == 4 || menuFlag == 5)
+            {
+                bool returnTrue = false;
+
+                while (true)
+                {
+                    viewCursor(menuFlag, menuNum);
+                    key = Console.ReadKey(true).Key;
+
+                    switch (key)
+                    {
+                        case ConsoleKey.Enter:
+                            returnTrue = true;
+                            break;
+                    }
+
+                    if (returnTrue)
+                    {
+                        break;
+                    }
+                }
+            }
+            return menuNum;
         }
 
         public void ViewUserCardList()
@@ -361,81 +560,17 @@ namespace clue
             Console.SetCursorPosition(75, 14);
             Console.WriteLine(" [ 유저 의 카드 목록 ]");
 
-            Console.SetCursorPosition(63, 17);
+            Console.SetCursorPosition(62, 16);
             for(int i =0; i<userCard.Count; i++)
             {
-                Console.Write($"[ {userCard[i].GetName() } ] ");
+                if( (i == 3) )
+                { 
+                    Console.SetCursorPosition(62, 18);
+                }
+                Console.Write($"[ {userCard[i].GetTypeString()} : {userCard[i].GetName() } ] ");
             }
         }
-
-        /*
-            public static void ViewGameState(User user)
-        {
-
-            Console.WriteLine(" [현재 턴] ");
-            Console.WriteLine("");
-            if(GameManager.Instance.turn ==0)
-            {
-                Console.WriteLine(" 나의 턴");
-            }
-            else if(GameManager.Instance.turn ==1)
-            {
-                Console.WriteLine(" COMPUTER 1의 턴");
-            }
-            else if(GameManager.Instance.turn ==2)
-            {
-                Console.WriteLine(" COMPUTER 2의 턴");
-            }
-            else
-            {
-                Console.WriteLine(" COMPUTER 3의 턴");
-            }
-            Console.WriteLine("");
-            Console.WriteLine(" [ 나의 현재 위치] ");
-            Console.WriteLine("");
-            Console.WriteLine($" X: {user.position.Item2 + 1} ,  Y : {user.position.Item1 +1 }");
-            Console.WriteLine("");
-            Console.WriteLine(" [ 나의 카드 목록 ] ");
-            Console.WriteLine("");
-            List<Card> userCard = GameManager.Instance.GetStartCardList(0);
-            for (int i = 0; i < userCard.Count; i++)
-            {
-                Console.Write($" {userCard[i].GetName()} ");
-            }
-
-            Console.WriteLine("");
-
-            #region 컴퓨터 카드 확인
-            /*    
-            Console.WriteLine("");
-            Console.WriteLine(" [ 컴1 카드 목록 ] ");
-            Console.WriteLine("");
-            List<Card> com1Card = GameManager.Instance.getStartCardList(1);
-            for (int i = 0; i < com1Card.Count; i++)
-            {
-                Console.Write($" {com1Card[i].getName()} ");
-            }
-            Console.WriteLine("");
-            Console.WriteLine("");
-            Console.WriteLine(" [ 컴2 카드 목록 ] ");
-            Console.WriteLine("");
-            List<Card> com2Card = GameManager.Instance.getStartCardList(2);
-            for (int i = 0; i < com2Card.Count; i++)
-            {
-                Console.Write($" {com2Card[i].getName()} ");
-            }
-            Console.WriteLine("");
-            Console.WriteLine("");
-            Console.WriteLine(" [ 컴3 카드 목록 ] ");
-            Console.WriteLine("");
-            List<Card> com3Card = GameManager.Instance.getStartCardList(3);
-            for (int i = 0; i < com3Card.Count; i++)
-            {
-                Console.Write($" {com3Card[i].getName()} ");
-            }
-            #endregion
-        }
-    */
+       
         void Shuffle<T>(List<T> list)   //카드 셔플
         {
             Random rand = new Random();
@@ -486,8 +621,6 @@ namespace clue
                 if (corrCard.Count == 0)
                 {
                     corrCard.Add(tempCard);
-                   // allCardList.Remove(tempCard);
-                   //TODO: 삭제하지말고 나중에 전체 정해지면 삭제하던지 놔두던지 확인하기
                     checkTime++;
                 }
                 else
