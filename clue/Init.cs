@@ -20,13 +20,13 @@ namespace clue
                 { 1 , 1 , 1 , 1 , 1 ,1 ,0 ,1 ,1 ,3 ,3 ,3 ,3 ,3 ,3 ,1 ,1 ,0 ,1 ,1 ,1 ,1 },
                 { 1 ,11 ,11 ,11 ,11 ,1 ,0 ,0 ,1 ,1 ,1 ,0 ,1 ,1 ,1 ,1 ,0 ,0 ,0 ,1 ,1 ,1 },
                 { 1 ,11 ,11 ,11 ,11 ,1 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1 ,1 ,1 },
-                { 1 ,11 ,11 ,11 ,11 ,1 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1 ,1 ,1 },
-                { 1 ,11 ,11 ,11 ,11 ,1 ,0 ,0 ,0 ,0 ,0 ,1 ,0 ,1 ,0 ,0 ,0 ,0 ,0 ,1 ,1 ,1 },
-                { 1 ,11 ,11 ,11 ,11 ,1 ,0 ,0 ,0 ,0 ,0 ,0 ,2 ,0 ,0 ,0 ,0 ,0 ,0 ,1 ,6 ,6 },
-                { 1 ,11 ,11 ,11 ,11 ,1 ,0 ,0 ,0 ,0 ,0 ,1 ,0 ,1 ,0 ,0 ,0 ,0 ,0 ,0 ,6 ,6 },
+                { 1 ,11 ,11 ,11 ,11 ,1 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1 ,6 ,6 },
+                { 1 ,11 ,11 ,11 ,11 ,1 ,0 ,0 ,0 ,0 ,1 ,0 ,1 ,0 ,0 ,0 ,0 ,0 ,0 ,1 ,6 ,6 },
+                { 1 ,11 ,11 ,11 ,11 ,1 ,0 ,0 ,0 ,0 ,0 ,2 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1 ,6 ,6 },
+                { 1 ,11 ,11 ,11 ,11 ,1 ,0 ,0 ,0 ,0 ,1 ,0 ,1 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,6 ,6 },
                 { 1 , 1 , 1 , 1 , 0 ,1 ,1 ,1 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1 ,6 ,6 },
                 { 1 ,10 ,10 , 1 , 0 ,0 ,1 ,1 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1 ,6 ,6 },
-                { 1 ,10 ,10 , 0 , 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1 ,1 ,1 ,1 },
+                { 1 ,10 ,10 , 0 , 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1 ,1 ,6 ,6 },
                 { 1 ,10 ,10 , 1 , 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1 ,1 ,1 ,1 },
                 { 1 , 1 , 1 , 1 , 0 ,1 ,1 ,1 ,1 ,1 ,1 ,0 ,1 ,1 ,1 ,1 ,1 ,0 ,1 ,1 ,1 ,1 },
                 { 1 , 9 , 9 , 9 , 9 ,9 ,1 ,8 ,8 ,8 ,8 ,8 ,8 ,8 ,8 ,1 ,7 ,7 ,7 ,7 ,7 ,1 },
@@ -39,13 +39,18 @@ namespace clue
 
         public static void ViewMap(User user, Com com1, Com com2, Com com3)
         {
+            Console.WriteLine("");
             for (int i = 0; i < 21; i++)
             {
                 for (int j = 0; j < 22; j++)
                 {
                     if ((j+1) % 22 == 1)
                     {
-                        Console.WriteLine("");
+                       Console.WriteLine("");
+                        for(int n = 0; n < 4; n++)
+                        {
+                            Console.Write(" ");
+                        }
                     }
                     if (user.position.Item1 == i && user.position.Item2 == j)
                     {
@@ -77,7 +82,6 @@ namespace clue
                         {
                             case 1:
                                 Console.ForegroundColor = ConsoleColor.DarkGray;
-                                
                                 Console.Write("■");
                                 Console.ResetColor();
                                 break;
@@ -135,6 +139,11 @@ namespace clue
                                 Console.Write("□");
                                 break;
                         }
+                        //Console.WriteLine(); // 각 줄의 끝에 줄 바꿈 추가
+                        //if ((j+1) % 22 == 1)
+                        //{
+                        //   Console.WriteLine("");
+                        //}
                     }
                 }
             }
@@ -144,74 +153,6 @@ namespace clue
         {
             //현재 위치. 가지고있는 카드 목록
 
-        }
-
-        public static void ViewGameState(User user)
-        {
-
-            Console.WriteLine(" [현재 턴] ");
-            Console.WriteLine("");
-            if(GameManager.Instance.turn ==0)
-            {
-                Console.WriteLine(" 나의 턴");
-            }
-            else if(GameManager.Instance.turn ==1)
-            {
-                Console.WriteLine(" COMPUTER 1의 턴");
-            }
-            else if(GameManager.Instance.turn ==2)
-            {
-                Console.WriteLine(" COMPUTER 2의 턴");
-            }
-            else
-            {
-                Console.WriteLine(" COMPUTER 3의 턴");
-            }
-            Console.WriteLine("");
-            Console.WriteLine(" [ 나의 현재 위치] ");
-            Console.WriteLine("");
-            Console.WriteLine($" X: {user.position.Item2 + 1} ,  Y : {user.position.Item1 +1 }");
-            Console.WriteLine("");
-            Console.WriteLine(" [ 나의 카드 목록 ] ");
-            Console.WriteLine("");
-            List<Card> userCard = GameManager.Instance.GetStartCardList(0);
-            for (int i = 0; i < userCard.Count; i++)
-            {
-                Console.Write($" {userCard[i].GetName()} ");
-            }
-
-            Console.WriteLine("");
-
-            #region 컴퓨터 카드 확인
-            /*    
-            Console.WriteLine("");
-            Console.WriteLine(" [ 컴1 카드 목록 ] ");
-            Console.WriteLine("");
-            List<Card> com1Card = GameManager.Instance.getStartCardList(1);
-            for (int i = 0; i < com1Card.Count; i++)
-            {
-                Console.Write($" {com1Card[i].getName()} ");
-            }
-            Console.WriteLine("");
-            Console.WriteLine("");
-            Console.WriteLine(" [ 컴2 카드 목록 ] ");
-            Console.WriteLine("");
-            List<Card> com2Card = GameManager.Instance.getStartCardList(2);
-            for (int i = 0; i < com2Card.Count; i++)
-            {
-                Console.Write($" {com2Card[i].getName()} ");
-            }
-            Console.WriteLine("");
-            Console.WriteLine("");
-            Console.WriteLine(" [ 컴3 카드 목록 ] ");
-            Console.WriteLine("");
-            List<Card> com3Card = GameManager.Instance.getStartCardList(3);
-            for (int i = 0; i < com3Card.Count; i++)
-            {
-                Console.Write($" {com3Card[i].getName()} ");
-            }
-            */
-            #endregion
         }
 
         void SetGamePanal()
@@ -240,8 +181,8 @@ namespace clue
         public static void GameManagerInit()
         {
             //gamemanager 초기화
-            Console.SetWindowSize(120, 45);
-            Console.SetBufferSize(120, 45);
+            Console.SetWindowSize(120, 40);
+            Console.SetBufferSize(120, 40);
 
             SetMap();
         }

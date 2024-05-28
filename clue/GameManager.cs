@@ -99,6 +99,343 @@ namespace clue
             }
         }
 
+        public void ViewSystem(List<string> message, int typeFlag = 0)
+        {
+            Console.SetCursorPosition(0,25);
+            for(int i = 0; i < 60; i++)
+            {
+                Console.Write("ㅡ");
+            }
+
+            Console.SetCursorPosition(18, 28);
+             if(typeFlag == 0)
+            {
+                Console.WriteLine(" [ SYSTEM ] ");
+            }
+             else if(typeFlag == 1)
+            {
+                Console.BackgroundColor = ConsoleColor.Red;
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine(" [ SYSTEM ] ");
+                Console.ResetColor();
+            }
+
+             for(int i = 0 ; i < message.Count; i++)
+            {
+                Console.SetCursorPosition(12, 31+i);
+                if(typeFlag == 0) //일반 시스템
+                {
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.WriteLine(message[i]);
+                    Console.ResetColor();
+                }
+                else if(typeFlag == 1)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine(message[i]);
+                    Console.ResetColor();
+                }
+            }
+
+        }
+
+        public void ViewMenu( int menuFlag )
+        {
+            Console.SetCursorPosition(86, 28);
+            Console.WriteLine(" [ MENU ] ");
+
+            if(menuFlag ==1)    //2번에 위치했을때
+            {   
+                Console.SetCursorPosition(88, 31);
+                Console.WriteLine(" 이동하기 ");
+                Console.SetCursorPosition(88, 33);
+                Console.WriteLine(" 최종추리하기 ");
+                }
+            else if(menuFlag ==2) // 0번에 위치했을때
+            { 
+                Console.SetCursorPosition(88, 31);
+                Console.WriteLine(" 이동하기 ");
+                Console.SetCursorPosition(88, 33);
+                Console.WriteLine(" 추리하기 ");
+            }
+            else if(menuFlag ==3)
+            {
+                Console.SetCursorPosition(88, 31);
+                Console.WriteLine(" ");
+
+                Console.WriteLine(" 왼쪽 ");
+            }
+            else
+            {
+                Console.SetCursorPosition(88, 31);
+                Console.WriteLine(" 이동하기 ");
+            }
+
+            Console.WriteLine("");
+        }
+
+        public void ViewRoomLabel()
+        {
+            Console.SetCursorPosition(26, 3);
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.BackgroundColor = ConsoleColor.Blue;
+            Console.WriteLine("식당");
+            Console.ResetColor();
+            
+            Console.SetCursorPosition(12, 3);
+            Console.ForegroundColor = ConsoleColor.Black;
+            Console.BackgroundColor = ConsoleColor.Cyan;
+            Console.WriteLine("부엌");
+            Console.ResetColor();
+            
+            Console.SetCursorPosition(38, 3);
+            Console.ForegroundColor = ConsoleColor.Black;
+            Console.BackgroundColor = ConsoleColor.Green;
+            Console.WriteLine("거실");
+            Console.ResetColor();
+            
+            Console.SetCursorPosition(8, 7);
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.BackgroundColor = ConsoleColor.DarkBlue;
+            Console.WriteLine("서재");
+            Console.ResetColor();
+            
+            Console.SetCursorPosition(6, 14);
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.BackgroundColor = ConsoleColor.DarkMagenta;
+            Console.WriteLine("욕실");
+            Console.ResetColor();
+            
+            Console.SetCursorPosition(8, 18);
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.BackgroundColor = ConsoleColor.DarkRed;
+            Console.WriteLine("침실");
+            Console.ResetColor();
+            
+            Console.SetCursorPosition(20, 18);
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.BackgroundColor = ConsoleColor.DarkYellow;
+            Console.WriteLine("게임룸");
+            Console.ResetColor();
+            
+            Console.SetCursorPosition(40, 18);
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.BackgroundColor = ConsoleColor.Magenta;
+            Console.WriteLine("차고");
+            Console.ResetColor();
+            
+            Console.SetCursorPosition(44, 9);
+            Console.ForegroundColor = ConsoleColor.Black;
+            Console.BackgroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("마당");
+            Console.ResetColor();
+        }
+
+        public void ViewSystemNotice()
+        {
+            Console.SetCursorPosition(60, 1);
+            for(int i= 0; i< 55; i++)
+            {
+                Console.Write("-");
+            }
+
+            Console.SetCursorPosition(62, 2);
+                                 
+            Console.ForegroundColor = ConsoleColor.DarkCyan;
+            Console.Write("□");
+            Console.ResetColor();
+            Console.Write(" - 중앙홀 ");
+                                 
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.Write("□");
+            Console.ResetColor();
+            Console.Write(" - 식당 ");
+                                 
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.Write("□");
+            Console.ResetColor();
+            Console.Write(" - 부엌 ");
+                                 
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.Write("□");
+            Console.ResetColor();
+            Console.Write(" - 거실 ");
+                                 
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.Write("□");
+            Console.ResetColor();
+            Console.Write(" - 마당 ");
+
+            Console.SetCursorPosition(62, 3);
+
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.Write("□");
+            Console.ResetColor();
+            Console.Write(" - 차고 ");
+                                 
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.Write("□");
+            Console.ResetColor();
+            Console.Write(" - 게임룸 ");
+                                 
+            Console.ForegroundColor = ConsoleColor.DarkRed;
+            Console.Write("□");
+            Console.ResetColor();
+            Console.Write(" - 침실 ");
+                                 
+            Console.ForegroundColor = ConsoleColor.DarkMagenta;
+            Console.Write("□");
+            Console.ResetColor();
+            Console.Write(" - 욕실 ");
+                                 
+            Console.ForegroundColor = ConsoleColor.DarkBlue;
+            Console.Write("□");
+            Console.ResetColor();
+            Console.Write(" - 서재 ");
+
+            Console.SetCursorPosition(66, 5);
+
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.Write("●");
+            Console.ResetColor();
+            Console.Write(" - 플레이어 ");
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.Write("▼");
+            Console.ResetColor();
+            Console.Write(" - COM1 ");
+
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.Write("▼");
+            Console.ResetColor();
+            Console.Write(" - COM2 ");
+
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.Write("▼");
+            Console.ResetColor();
+            Console.Write(" - COM3 ");
+
+            Console.SetCursorPosition(60, 6);
+            for(int i= 0; i< 55; i++)
+            {
+                Console.Write("-");
+            }
+        }
+
+        public void ViewGameState()
+        {
+            Console.SetCursorPosition(80, 8);
+            Console.WriteLine(" [ 현재 턴 ] ");
+
+                Console.SetCursorPosition(80, 10);
+            if(turn==0)
+            {
+                Console.WriteLine(" 유저 의 턴 ");
+            }
+            else if(turn ==1)
+            {
+                Console.WriteLine(" COM1 의 턴 ");
+            }
+            else if(turn ==2)
+            {
+                Console.WriteLine(" COM2 의 턴 ");
+            }
+            else
+            {
+                Console.WriteLine(" COM3 의 턴 ");
+            }
+        }
+
+        public void ChooseUserMenu()
+        {
+
+        }
+
+        public void ViewUserCardList()
+        {
+            Console.SetCursorPosition(60, 12);
+            for(int i= 0; i< 55; i++)
+            {
+                Console.Write("-");
+            }
+            Console.SetCursorPosition(75, 14);
+            Console.WriteLine(" [ 유저 의 카드 목록 ]");
+
+            Console.SetCursorPosition(63, 17);
+            for(int i =0; i<userCard.Count; i++)
+            {
+                Console.Write($"[ {userCard[i].GetName() } ] ");
+            }
+        }
+
+        /*
+            public static void ViewGameState(User user)
+        {
+
+            Console.WriteLine(" [현재 턴] ");
+            Console.WriteLine("");
+            if(GameManager.Instance.turn ==0)
+            {
+                Console.WriteLine(" 나의 턴");
+            }
+            else if(GameManager.Instance.turn ==1)
+            {
+                Console.WriteLine(" COMPUTER 1의 턴");
+            }
+            else if(GameManager.Instance.turn ==2)
+            {
+                Console.WriteLine(" COMPUTER 2의 턴");
+            }
+            else
+            {
+                Console.WriteLine(" COMPUTER 3의 턴");
+            }
+            Console.WriteLine("");
+            Console.WriteLine(" [ 나의 현재 위치] ");
+            Console.WriteLine("");
+            Console.WriteLine($" X: {user.position.Item2 + 1} ,  Y : {user.position.Item1 +1 }");
+            Console.WriteLine("");
+            Console.WriteLine(" [ 나의 카드 목록 ] ");
+            Console.WriteLine("");
+            List<Card> userCard = GameManager.Instance.GetStartCardList(0);
+            for (int i = 0; i < userCard.Count; i++)
+            {
+                Console.Write($" {userCard[i].GetName()} ");
+            }
+
+            Console.WriteLine("");
+
+            #region 컴퓨터 카드 확인
+            /*    
+            Console.WriteLine("");
+            Console.WriteLine(" [ 컴1 카드 목록 ] ");
+            Console.WriteLine("");
+            List<Card> com1Card = GameManager.Instance.getStartCardList(1);
+            for (int i = 0; i < com1Card.Count; i++)
+            {
+                Console.Write($" {com1Card[i].getName()} ");
+            }
+            Console.WriteLine("");
+            Console.WriteLine("");
+            Console.WriteLine(" [ 컴2 카드 목록 ] ");
+            Console.WriteLine("");
+            List<Card> com2Card = GameManager.Instance.getStartCardList(2);
+            for (int i = 0; i < com2Card.Count; i++)
+            {
+                Console.Write($" {com2Card[i].getName()} ");
+            }
+            Console.WriteLine("");
+            Console.WriteLine("");
+            Console.WriteLine(" [ 컴3 카드 목록 ] ");
+            Console.WriteLine("");
+            List<Card> com3Card = GameManager.Instance.getStartCardList(3);
+            for (int i = 0; i < com3Card.Count; i++)
+            {
+                Console.Write($" {com3Card[i].getName()} ");
+            }
+            #endregion
+        }
+    */
         void Shuffle<T>(List<T> list)   //카드 셔플
         {
             Random rand = new Random();
@@ -143,7 +480,7 @@ namespace clue
             while (checkTime < 3)
             {
             Random rand = new Random();
-                num = rand.Next(0, cardName.Count());
+                num = rand.Next(0, allCardList.Count());
                 Card tempCard = allCardList[num];
 
                 if (corrCard.Count == 0)
