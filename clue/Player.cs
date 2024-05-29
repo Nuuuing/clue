@@ -59,7 +59,7 @@ namespace clue
 
          public bool CheckComPosMiddle()
         {
-            if(this.position.Equals((9, 12)))
+            if(this.position.Equals((9, 11)))
                 return true;
             else
                 return false;

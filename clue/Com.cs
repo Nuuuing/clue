@@ -228,53 +228,60 @@ namespace clue
         {
             List<Card> _allCard = _instance.GetAllCard();
             int thisLocNum = GetLocByCoor(this.position);
-            
-            List<Card> unknowWepCard = new List<Card>(); //모르는 wep 카드 List
-            List<Card> unknowPerCard = new List<Card>(); //모르는 per 카드 List
-            List<Card> allKnowCard = new List<Card>();
 
-            allKnowCard = knowLocCard;
-            for(int i = 0; i < knowPerCard.Count; i++)
-            {
-                allKnowCard.Add(knowPerCard[i]);
-            }
-            for(int i = 0; i< knowWepCard.Count; i ++)
-            {
-                allKnowCard.Add(knowWepCard[i]);
-            }
+            List<Card> unknowWepCard = new List<Card>(); // 모르는 wep 카드 리스트
+            List<Card> unknowPerCard = new List<Card>(); // 모르는 per 카드 리스트
+            List<Card> allKnowCard = new List<Card>();   // 전체 아는 카드 리스트
 
-            Card thisLocCard;   //현재 위치의 장소카드
-            List<Card> newGuessCard = new List<Card>();//새로 뽑은 추리 카드
+            // 전체 아는 카드 리스트를 만듬
+            allKnowCard.AddRange(knowLocCard);
+            allKnowCard.AddRange(knowPerCard);
+            allKnowCard.AddRange(knowWepCard);
+
+            Card thisLocCard = null;  // 현재 위치의 장소 카드
+            List<Card> newGuessCard = new List<Card>(); // 새로 뽑은 추리 카드
 
             for (int i = 0; i < _allCard.Count; i++)
             {
+                bool isKnown = false;
+
                 for (int j = 0; j < allKnowCard.Count; j++)
                 {
-                    if (!_allCard[i].Equals(allKnowCard[j].GetName()))
+                    if (_allCard[i].Equals(allKnowCard[j]))
                     {
-                        if(_allCard[i].GetCardType().Equals(CardType.PER))
-                        {
-                            unknowPerCard.Add(_allCard[i]);
-                        }
-                        else if(_allCard[i].GetCardType().Equals(CardType.WEP))
-                        {
-                            unknowWepCard.Add(_allCard[i]);
-                        }
+                        isKnown = true;
+                        break;
                     }
                 }
-                if(_allCard[i].GetName().Equals(GetNameByCoor(this.position)))
+
+                if (!isKnown)
                 {
-                    thisLocCard = _allCard[i];
-                    newGuessCard.Add(thisLocCard);
+                    if (_allCard[i].GetCardType().Equals(CardType.PER) && !unknowPerCard.Contains(_allCard[i]))
+                        unknowPerCard.Add(_allCard[i]);
+                    else if (_allCard[i].GetCardType().Equals(CardType.WEP) && !unknowWepCard.Contains(_allCard[i]))
+                        unknowWepCard.Add(_allCard[i]);
                 }
+
+                if (_allCard[i].GetName().Equals(GetNameByCoor(this.position)))
+                    thisLocCard = _allCard[i];
             }
 
-            Random rand = new Random();
-            int wepNum = rand.Next(0, unknowWepCard.Count);
-            int perNum = rand.Next(0, unknowPerCard.Count);
+            if (thisLocCard != null)
+                newGuessCard.Add(thisLocCard);
 
-            newGuessCard.Add(unknowWepCard[wepNum]);
-            newGuessCard.Add(unknowPerCard[perNum]);
+            if (unknowWepCard.Count > 0)
+            {
+                Random rand = new Random();
+                int wepNum = rand.Next(0, unknowWepCard.Count);
+                newGuessCard.Add(unknowWepCard[wepNum]);
+            }
+
+            if (unknowPerCard.Count > 0)
+            {
+                Random rand = new Random();
+                int perNum = rand.Next(0, unknowPerCard.Count);
+                newGuessCard.Add(unknowPerCard[perNum]);
+            }
 
             _instance.SetGuessCard(newGuessCard);
         }
@@ -304,7 +311,7 @@ namespace clue
             List<Card> thisCardList = GetCardList();
             List<Card> sameCardList = new List<Card>();
 
-            for(int i=0; i <  thisCardList.Count ; i++ )
+            for(int i=0; i < thisCardList.Count ; i++ )
             {
                 for(int j = 0; j < guessCardList.Count ; j++)
                 {
@@ -351,7 +358,7 @@ namespace clue
                 Console.SetCursorPosition(0, 0);
                 Thread.Sleep(300);
 
-                Init.ViewMap(user, com1, com2, com3);
+                Init.ViewMap(_instance, user, com1, com2, com3);
                 _instance.ViewRoomLabel();
                 //this.SetMoveCount(this.GetMoveCount() - 1);
                 //this.ViewUserState(true);
@@ -359,46 +366,54 @@ namespace clue
         }
 
         public List<Card> FinalGuess(GameManager _instance) //최종추리카드 return
-        {
-            List<Card> finalCard = new List<Card>();   
+        {   
+            List<Card> finalCard = new List<Card>();
             List<Card> tempAllCard = _instance.GetAllCard();
 
-            for(int i = 0; i < tempAllCard.Count; i++)
+            for (int i = 0; i < tempAllCard.Count; i++)
             {
-                if(tempAllCard[i].GetType().Equals(CardType.LOC))
+                bool isKnown = false;
+                CardType type = tempAllCard[i].GetCardType();
+
+                if (type.Equals(CardType.LOC))
                 {
-                    for(int j =0; j < knowLocCard.Count; j++)
+                    for (int j = 0; j < knowLocCard.Count; j++)
                     {
-                        if(!(tempAllCard[i].Equals(knowLocCard[j])))
+                        if (tempAllCard[i].Equals(knowLocCard[j]))
                         {
-                            finalCard.Add(tempAllCard[i]);
+                            isKnown = true;
+                            break;
                         }
                     }
                 }
-                else if(tempAllCard[i].GetType().Equals(CardType.PER))
+                else if (type.Equals(CardType.PER))
                 {
-                    for(int j = 0; j < knowPerCard.Count; j++)
+                    for (int j = 0; j < knowPerCard.Count; j++)
                     {
-                        if(!(tempAllCard[i].Equals(knowPerCard[j])))
+                        if (tempAllCard[i].Equals(knowPerCard[j]))
                         {
-                            finalCard.Add(tempAllCard[i]);
+                            isKnown = true;
+                            break;
                         }
                     }
                 }
                 else
                 {
-                    for(int j=0; j< knowWepCard.Count; j++)
+                    for (int j = 0; j < knowWepCard.Count; j++)
                     {
-                        if(! (tempAllCard[i].Equals(knowWepCard[j])))
+                        if (tempAllCard[i].Equals(knowWepCard[j]))
                         {
-                            finalCard.Add(tempAllCard[i]);
+                            isKnown = true;
+                            break;
                         }
                     }
                 }
+
+                if (!isKnown && !finalCard.Contains(tempAllCard[i]))
+                    finalCard.Add(tempAllCard[i]);
             }
-            
             return finalCard;
-        }   
+        }
 
         public int CheckFinalGuess(GameManager _instance, List<Card> fCards)    //맞은 갯수 return
         {

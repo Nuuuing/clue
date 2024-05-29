@@ -11,7 +11,6 @@ namespace clue
         int key;
         CardType type;  //카드 타입
         string name;    //카드 명
-        bool know = false;      //카드 확인 여부
 
         public Card(int key, CardType type, string name)
         {

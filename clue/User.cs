@@ -9,10 +9,21 @@ namespace clue
     class User : Player
     {
         bool isMove = false;
+        bool isFinalGuess = false;
 
         public void SetUserMove(bool _flag)
         {
             isMove = _flag;
+        }
+
+        public void SetFinalGuessT()
+        {
+            isFinalGuess = true;
+        }
+
+        public bool GetFinalGuess()
+        {
+            return isFinalGuess;
         }
 
         public bool GetUserMove()
@@ -83,6 +94,32 @@ namespace clue
                     }
                     break;
             }
+        }
+
+        public List<Card> GetUnHaveCardList(GameManager _instance)
+        {
+            List<Card> returnList = new List<Card>();
+            List<Card> allCard = _instance.GetAllCard();
+            List<Card> thisCardList = this.GetCardList();
+
+            for (int i = 0; i < allCard.Count; i++)
+            {
+                bool isSame = false;
+                for (int j = 0; j < thisCardList.Count; j++)
+                {
+                    if (allCard[i].GetName().Equals(thisCardList[j].GetName()))
+                    {
+                        isSame = true;
+                        break;
+                    }
+                }
+                if (!isSame)
+                {
+                    returnList.Add(allCard[i]);
+                }
+            }
+
+            return returnList;
         }
 
     }
