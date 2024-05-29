@@ -128,13 +128,14 @@ namespace clue
 
             while (gm.Running)  //게임 중일때동안
             {
+                /*
                 if(user.GetAlive() == false && com1.GetAlive() == false && com2.GetAlive() == false && com3.GetAlive() == false)
                 {   //모두 죽어서 실패
                     gm.Running = false;
                     gm.SetWinner(4);
                     break;
                 }
-
+                
                 if (gm.turn == 0)   //유저 턴
                 {
                     if (user.GetAlive())    //살아있으면 이동 및 선택지 선택 가능
@@ -153,7 +154,7 @@ namespace clue
                         int selectMenuNum = 0;
                         int menuNum = 0;
 
-                        Thread.Sleep(500);
+                        Thread.Sleep(200);
                         //********************************** 턴 시작하면 주사위 던지고 시작하기
                         systemLable.Clear();
                         int rollCount = gm.RollDice();  //주사위 굴리기
@@ -222,11 +223,9 @@ namespace clue
                                     gm.menuClear();
                                     while (guessNum < 3)
                                     {
-
                                         if (guessNum == 0)
                                         {
-                                            //TODO: 현재 좌표의 장소 카드 리턴하기
-                                                guessNum++;
+                                            guessNum++;
                                         }
                                         else if (guessNum == 1)
                                         {
@@ -453,7 +452,8 @@ namespace clue
                 }
                 else if (gm.turn == 1)
                 {
-                    if (com1.GetAlive())    //살아있는지 여부
+                    */
+                if (com1.GetAlive())    //살아있는지 여부
                     {
                         gm.ViewGameState();             //현재 턴 notice
                         Thread.Sleep(200);
@@ -462,7 +462,7 @@ namespace clue
                         systemLable.Clear();
                         int rollCount = gm.RollDice();  //주사위 굴리기
                         com1.SetMoveCount(rollCount);   //유저 객체에 현재 diceCount 추가
-                        RollDiceIntro(rollCount, gm.turn);       //주사위 굴리기 intro
+                        RollDiceIntro(rollCount, 1);       //주사위 굴리기 intro
 
                         gm.ViewSystemDescription();  //전체 시스템 Description
                         Init.ViewMap(gm, user, com1, com2, com3);   //맵 뿌려주기
@@ -564,8 +564,9 @@ namespace clue
                             if(isMiddle)
                             {
                                 //2번(중앙홀로) 이동하기
-                                List<(int, int)> path = com1.FindShortestPath(gm.map, com1.position, (9, 11));
+                                com1.checkLoc = 2;
                                 com1.goPath.Clear();
+                                List<(int, int)> path = com1.FindShortestPath(gm.map, com1.position, (9, 11));
                                 if (path != null)
                                 {
                                     for (int i = 0; i < path.Count; i++)
@@ -579,8 +580,9 @@ namespace clue
                             {
                                 if (com1.CheckGoLocation()) //새로운 장소를 찾아야하는지 여부
                                 {
-                                    List<(int, int)> path = com1.FindShortestPath(gm.map, com1.position, com1.GetRandomCoor(gm.GetAllCard()));
+                                    com1.checkLoc = com1.GetRandomNum(gm.GetAllCard());
                                     com1.goPath.Clear();
+                                    List<(int, int)> path = com1.FindShortestPath(gm.map, com1.position, com1.GetCoorByNum(com1.checkLoc));
                                     if (path != null)
                                     {
                                         for (int i = 0; i < path.Count; i++)
@@ -597,7 +599,8 @@ namespace clue
                             }
                         }
                     }
-                    gm.SetGuessUser(-1);    //현재 추리중인 유저 초기화
+                /*    
+                gm.SetGuessUser(-1);    //현재 추리중인 유저 초기화
                     gm.turn++;
                 }
                 else if (gm.turn == 2)
@@ -900,6 +903,7 @@ namespace clue
                     gm.SetGuessUser(-1);    //현재 추리중인 유저 초기화
                     gm.turn = 0;
                 }
+                */
             }
 
             {

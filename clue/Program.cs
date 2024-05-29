@@ -17,9 +17,9 @@ namespace clue
             if ( intro.EndIntro ==true)
             {
             */
-            Game game = new Game();
+                Game game = new Game();
                 game.Run();
-           // }
+            //}
         }
     }
 }

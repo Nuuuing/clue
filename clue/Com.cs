@@ -12,7 +12,7 @@ namespace clue
         List<Card> knowLocCard = new List<Card>();    //알고있는 카드 정보
         List<Card> knowWepCard = new List<Card>();
         List<Card> knowPerCard = new List<Card>();
-        int checkLoc;           //현재 찾고있는 장소
+        public int checkLoc;           //현재 찾고있는 장소
         public Queue<(int, int)> goPath = new Queue<(int, int)>();   //가고있는 루트
 
         public Com(List<Card> startCard)
@@ -184,7 +184,7 @@ namespace clue
             return null; // 경로를 찾지 못한 경우
         }
 
-        public (int, int) GetRandomCoor(List<Card> _allCard)    // 알고 있는 장소 제외 랜덤 장소 좌표 RETURN
+        public int GetRandomNum(List<Card> _allCard)    // 알고 있는 장소 제외 랜덤 장소 좌표 RETURN
         {
             List<Card> tempLocCard = new List<Card>();
 
@@ -200,7 +200,7 @@ namespace clue
             Random rand = new Random();
             int randNum = rand.Next(0, tempLocCard.Count);
 
-            return GetCoorByNum(GetLocByName(tempLocCard[randNum].GetName()));
+            return GetLocByName(tempLocCard[randNum].GetName());
         }
 
         public bool CheckThisKnow()

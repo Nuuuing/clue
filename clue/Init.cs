@@ -39,6 +39,8 @@ namespace clue
 
         public static void ViewMap(GameManager _instance, User user, Com com1, Com com2, Com com3)
         {
+            Console.SetCursorPosition(0, 0);
+            Console.WriteLine($"{user.position.Item1} , {user.position.Item2}");
             Console.SetCursorPosition(0, 1);
             for (int i = 0; i < 21; i++)
             {

@@ -68,7 +68,7 @@ namespace clue
         public bool CheckIsLoc()    //현재 위치가 장소타일인지 확인, but 2일때도 false
         {
             bool isLoc = false;
-            if (GetLocByCoor(position) != 2 && GetLocByCoor(position) != -1)
+            if (GetLocByCoor(this.position) != 2 && GetLocByCoor(this.position) != 0)
             {
                 isLoc = true;
             }
