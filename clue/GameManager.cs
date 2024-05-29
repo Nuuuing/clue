@@ -933,7 +933,11 @@ namespace clue
                         break;
                 }
 
-                if (returnTrue)
+                if(menuNum == cardCount)
+                {
+                    break;
+                }
+                else if (returnTrue && (menuNum != cardCount))
                 {
                     for (int i = 0; i < thisGuess.Count; i++)
                     {
@@ -943,20 +947,27 @@ namespace clue
                         }
                     }
                     //TODO: 해당카드는 현재 추리한 카드에 포함되어있지않아 사용할수 X ALERT
-
                     continue;
                 }
+                    //TODO: 증명 포기 메뉴 추가하기
             }
             return menuNum;
         }
 
         public Card UserProv()
         {
-
             int chooseNum = ChooseCardSelect();
-
-            return this.userCard[chooseNum];
+            if (chooseNum == userCard.Count)
+            {
+                Card noCard = new Card(0, CardType.LOC, "temp");
+                return noCard;
+            }
+            else
+            {
+                return this.userCard[chooseNum];
+            }
         }
+
         //------------------유저 검증 메뉴 END---------------------
         public void ViewUserCardList()
         {

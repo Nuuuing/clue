@@ -55,6 +55,56 @@ namespace clue
             Console.Clear();
         }
 
+        void EndinngIntro(int user)
+        {
+            Console.Clear();
+            Console.SetCursorPosition(50, 15);
+            if (user == 0)
+            {
+                Console.WriteLine(" [  WIN  ] ");
+            }
+            else
+            {
+                Console.WriteLine(" [ GAME OVER ] ");
+            }
+
+            Console.SetCursorPosition(42, 17);
+
+            if (user == 0)
+            {
+                Console.WriteLine("   당신이 이겼습니다. ");
+                Console.SetCursorPosition(42, 18);
+                Console.WriteLine("   축하합니다! ");
+            }
+            else if (user == 1)
+            {
+                Console.WriteLine("    COM1 가 이겼습니다. ");
+                Console.SetCursorPosition(42, 18);
+                Console.WriteLine("   아쉽네요 ");
+            }
+            else if (user == 2)
+            {
+                Console.WriteLine("    COM2 가 이겼습니다. ");
+                Console.SetCursorPosition(42, 18);
+                Console.WriteLine("   아쉽네요 ");
+            }
+            else if(user ==3)
+            {
+                Console.WriteLine("    COM3 가 이겼습니다. ");
+                Console.SetCursorPosition(42, 18);
+                Console.WriteLine("   아쉽네요 ");
+            }
+            else
+            {
+                Console.WriteLine("    모두 실패하였습니다. ");
+                Console.SetCursorPosition(42, 18);
+                Console.WriteLine("   아쉽네요 ");
+            }
+
+            Console.ReadLine();
+            Console.Clear();
+        }
+
         public void Run()
         {
             List<string> systemLable = new List<string>();
@@ -79,9 +129,9 @@ namespace clue
             while (gm.Running)  //게임 중일때동안
             {
                 if(user.GetAlive() == false && com1.GetAlive() == false && com2.GetAlive() == false && com3.GetAlive() == false)
-                {
+                {   //모두 죽어서 실패
                     gm.Running = false;
-                    //TODO: 모두 죽어서 게임오버. 승자 없음 ALERT
+                    gm.SetWinner(4);
                     break;
                 }
 
@@ -221,6 +271,7 @@ namespace clue
                                         if(com1.Prove(gm))
                                         {
                                             com1.GetProvCard(gm);
+                                            //TODO: 컴퓨터 증명한것 보여주는 화면 추가하기
                                         }
                                         else
                                         {
@@ -386,6 +437,10 @@ namespace clue
                                     user.Move(MoveDir.LEFT);
                                 else
                                     user.Move(MoveDir.RIGHT);
+
+                                user.ViewUserState(true);
+                                Init.ViewMap(gm, user, com1, com2, com3);
+                                gm.ViewRoomLabel(); //전체 맵 라벨
                             }
                         }
 
@@ -401,7 +456,7 @@ namespace clue
                     if (com1.GetAlive())    //살아있는지 여부
                     {
                         gm.ViewGameState();             //현재 턴 notice
-                        Thread.Sleep(500);
+                        Thread.Sleep(200);
 
                         //********************************** 턴 시작하면 주사위 던지고 시작하기
                         systemLable.Clear();
@@ -476,8 +531,8 @@ namespace clue
                             if (com2.Prove(gm))
                             {
                                 //com2 증명
-                                Card provCard = com2.GetProvCard(gm);
-                                com1.AddKnowCard(provCard);
+                                Card provCard2 = com2.GetProvCard(gm);
+                                com1.AddKnowCard(provCard2);
                                 //TODO: 증명하고 ~~가 증명했습니다. 문구 alert
                             }
                             else
@@ -486,8 +541,8 @@ namespace clue
                                 if (com3.Prove(gm))
                                 {
                                     //com3 증명
-                                    Card provCard = com3.GetProvCard(gm);
-                                    com1.AddKnowCard(provCard);
+                                    Card provCard3 = com3.GetProvCard(gm);
+                                    com1.AddKnowCard(provCard3);
                                     //TODO: 증명하고 ~~가 증명했습니다. 문구 alert 
                                 }
                                 else
@@ -497,8 +552,8 @@ namespace clue
                                         //user 증명
                                         //TODO: 증명추가하기   
                                         //TODO: 유저도 증명못하면 모두 증명 못했음 ALERT
-                                        Card provCard = gm.UserProv();
-                                        com1.AddKnowCard(provCard);
+                                        Card provCardU = gm.UserProv();
+                                        com1.AddKnowCard(provCardU);
                                     }
                                 }
                             }
@@ -533,10 +588,6 @@ namespace clue
                                             com1.goPath.Enqueue(path[i]);
                                         }
                                     }
-                                    else
-                                    {
-                                        Console.WriteLine("no~");   //경로 못찾을때
-                                    }
                                     com1.ComMove(gm, user, com1, com2, com3);
                                 }
                                 else
@@ -545,7 +596,6 @@ namespace clue
                                 }
                             }
                         }
-
                     }
                     gm.SetGuessUser(-1);    //현재 추리중인 유저 초기화
                     gm.turn++;
@@ -586,13 +636,13 @@ namespace clue
                                 //TODO: 최종추리 LABEL 추가하기
                                 if (corrNum == 3)
                                 {
-                                    gm.SetWinner(1);
+                                    gm.SetWinner(2);
                                     gm.EndGame();
                                     break;
                                 }
                                 else
                                 {
-                                    com1.SetDie();
+                                    com2.SetDie();
                                     //TODO: 맞은갯수 반환
                                 }
                             }
@@ -610,18 +660,53 @@ namespace clue
                                 if (!com2.CheckThisKnow())   //현재 장소가 이미 알고있는 카드가 아니면
                                 {
                                     com2.Guess(gm); //추리할카드 저장
-                                    gm.SetGuessUser(1);
+                                    gm.SetGuessUser(2);
                                     //TODO: 현재위치 번호를 저장하고 문구띄우기 -> ~~가 ~~로 추리했습니다.
                                 }
                             }
                             else
                             {   //현재 위치가 장소가 아닐때
                                 systemLable.Clear();
-                                systemLable.Add(" COM1 이 이동합니다.        ");
+                                systemLable.Add(" COM2 이 이동합니다.        ");
                                 gm.ViewSystemComment(systemLable, 0);
 
                                 isMiddle = false;
                                 isMove = true;
+                            }
+                        }
+
+                        if (gm.GetGuessUser() == 2)  //현재 추리중인 유저가 1이면
+                        {
+                            if (com3.Prove(gm))
+                            {
+                                //com2 증명
+                                Card provCard3 = com3.GetProvCard(gm);
+                                com2.AddKnowCard(provCard3);
+                                //TODO: 증명하고 ~~가 증명했습니다. 문구 alert
+                            }
+                            else
+                            {
+                                //TODO: com2 증명 못함 => 다음사람이 증명합니다 alert
+                                //user 증명
+                                //TODO: 유저도 증명못하면 모두 증명 못했음 ALERT
+                                Card provCardU = gm.UserProv();
+                                if(!provCardU.GetName().Equals("temp"))
+                                {
+                                    com2.AddKnowCard(provCardU);
+                                }
+                                else
+                                {
+                                    if(com1.Prove(gm))
+                                    {
+                                        //com1 증명
+                                        Card provCard1 = com1.GetProvCard(gm);
+                                        com2.AddKnowCard(provCard1);
+                                    }
+                                    else
+                                    {
+                                        //TODO: 모두 증명 못함 ALERT
+                                    }
+                                }
                             }
                         }
 
@@ -654,30 +739,12 @@ namespace clue
                                             com2.goPath.Enqueue(path[i]);
                                         }
                                     }
-                                    else
-                                    {
-                                        Console.WriteLine("no~");   //경로 못찾을때
-                                    }
                                     com2.ComMove(gm, user, com1, com2, com3);
                                 }
                                 else
                                 {
                                     com2.ComMove(gm, user, com1, com2, com3);
                                 }
-                            }
-                        }
-
-                        if (gm.GetGuessUser() == 2)  //현재 추리중인 유저가 1이면
-                        {
-                            if (com3.Prove(gm))
-                            {
-                                //com2 증명
-                                Card provCard = com3.GetProvCard(gm);
-                                //TODO: 증명하고 ~~가 증명했습니다. 문구 alert
-                            }
-                            else
-                            {
-                                //TODO: 유저 증명 -> COM1 증명
                             }
                         }
                     }
@@ -689,12 +756,12 @@ namespace clue
                     if (com3.GetAlive())    //살아있는지 여부
                     {
                         gm.ViewGameState();             //현재 턴 notice
-
                         Thread.Sleep(500);
+
                         //********************************** 턴 시작하면 주사위 던지고 시작하기
                         systemLable.Clear();
                         int rollCount = gm.RollDice();  //주사위 굴리기
-                        com1.SetMoveCount(rollCount);   //유저 객체에 현재 diceCount 추가
+                        com3.SetMoveCount(rollCount);   //유저 객체에 현재 diceCount 추가
                         RollDiceIntro(rollCount, gm.turn);       //주사위 굴리기 intro
 
                         gm.ViewSystemDescription();  //전체 시스템 Description
@@ -714,13 +781,13 @@ namespace clue
                         {
                             if (com3.CheckComPosMiddle()) //현재 중앙홀에 있는지 확인
                             {
-                                List<Card> finalCards = com1.FinalGuess(gm);    //모르는 카드중 1개씩 return
+                                List<Card> finalCards = com3.FinalGuess(gm);    //모르는 카드중 1개씩 return
                                 int corrNum = com3.CheckFinalGuess(gm, finalCards);
 
                                 //TODO: 최종추리 LABEL 추가하기
                                 if (corrNum == 3)
                                 {
-                                    gm.SetWinner(1);
+                                    gm.SetWinner(3);
                                     gm.EndGame();
                                     break;
                                 }
@@ -744,18 +811,51 @@ namespace clue
                                 if (!com3.CheckThisKnow())   //현재 장소가 이미 알고있는 카드가 아니면
                                 {
                                     com3.Guess(gm); //추리할카드 저장
-                                    gm.SetGuessUser(1);
+                                    gm.SetGuessUser(3);
                                     //TODO: 현재위치 번호를 저장하고 문구띄우기 -> ~~가 ~~로 추리했습니다.
                                 }
                             }
                             else
                             {   //현재 위치가 장소가 아닐때
                                 systemLable.Clear();
-                                systemLable.Add(" COM1 이 이동합니다.        ");
+                                systemLable.Add(" COM3 이 이동합니다.        ");
                                 gm.ViewSystemComment(systemLable, 0);
 
                                 isMiddle = false;
                                 isMove = true;
+                            }
+                        }
+
+                        if (gm.GetGuessUser() == 3)  //현재 추리중인 유저가 3이면
+                        {
+                            Card provCardU = gm.UserProv();
+                            if (!provCardU.GetName().Equals("temp"))
+                            {
+                                com3.AddKnowCard(provCardU);
+                            }
+                            else
+                            {
+                                if (com1.Prove(gm))
+                                {
+                                    //com1 증명
+                                    Card provCard1 = com1.GetProvCard(gm);
+                                    com3.AddKnowCard(provCard1);
+                                }
+                                else
+                                {
+                                    if (com2.Prove(gm))
+                                    {
+                                        //com2 증명
+                                        Card provCard2 = com2.GetProvCard(gm);
+                                        com3.AddKnowCard(provCard2);
+                                        //TODO: 증명하고 ~~가 증명했습니다. 문구 alert
+                                    }
+                                    else
+                                    {
+                                        //TODO: 유저도 증명못하면 모두 증명 못했음 ALERT
+                                    }
+                                   
+                                }
                             }
                         }
 
@@ -777,9 +877,9 @@ namespace clue
                             }
                             else
                             {
-                                if (com1.CheckGoLocation()) //새로운 장소를 찾아야하는지 여부
+                                if (com3.CheckGoLocation()) //새로운 장소를 찾아야하는지 여부
                                 {
-                                    List<(int, int)> path = com1.FindShortestPath(gm.map, com3.position, com3.GetRandomCoor(gm.GetAllCard()));
+                                    List<(int, int)> path = com3.FindShortestPath(gm.map, com3.position, com3.GetRandomCoor(gm.GetAllCard()));
                                     com3.goPath.Clear();
                                     if (path != null)
                                     {
@@ -787,10 +887,6 @@ namespace clue
                                         {   //가고있는 경로 큐에 담음
                                             com3.goPath.Enqueue(path[i]);
                                         }
-                                    }
-                                    else
-                                    {
-                                        Console.WriteLine("no~");   //경로 못찾을때
                                     }
                                     com3.ComMove(gm, user, com1, com2, com3);
                                 }
@@ -800,11 +896,6 @@ namespace clue
                                 }
                             }
                         }
-
-                        if (gm.GetGuessUser() == 3)  //현재 추리중인 유저가 1이면
-                        {
-                           //TODO: 유저 증명 -> COM1, COM2 증명
-                        }
                     }
                     gm.SetGuessUser(-1);    //현재 추리중인 유저 초기화
                     gm.turn = 0;
@@ -812,22 +903,7 @@ namespace clue
             }
 
             {
-                if (gm.GetWinner() == 0)
-                {
-                    //유저 우승
-                }
-                else if (gm.GetWinner() == 1)
-                {
-                    //com1 우승
-                }
-                else if (gm.GetWinner() == 2)
-                {
-                    //com2 우승
-                }
-                else
-                {
-                    //com3 우승
-                }
+                EndinngIntro(gm.GetWinner());
             }
         }
     }

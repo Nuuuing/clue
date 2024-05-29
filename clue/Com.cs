@@ -184,21 +184,16 @@ namespace clue
             return null; // 경로를 찾지 못한 경우
         }
 
-        public (int, int) GetRandomCoor(List<Card> _allCard)    //알고있는 장소 제외랜덤 장소 좌표 RETURN
+        public (int, int) GetRandomCoor(List<Card> _allCard)    // 알고 있는 장소 제외 랜덤 장소 좌표 RETURN
         {
             List<Card> tempLocCard = new List<Card>();
 
             for (int i = 0; i < _allCard.Count; i++)
             {
-                for (int j = 0; j < knowLocCard.Count; j++)
+                if (_allCard[i].GetCardType().Equals(CardType.LOC) &&
+                    !knowLocCard.Any(locCard => locCard.GetName().Equals(_allCard[i].GetName())))
                 {
-                    if (_allCard[i].GetCardType().Equals(CardType.LOC))
-                    {
-                        if (!_allCard[i].GetName().Equals(knowLocCard[j].GetName()))
-                        {
-                            tempLocCard.Add(_allCard[i]);
-                        }
-                    }
+                    tempLocCard.Add(_allCard[i]);
                 }
             }
 
@@ -206,11 +201,11 @@ namespace clue
             int randNum = rand.Next(0, tempLocCard.Count);
 
             return GetCoorByNum(GetLocByName(tempLocCard[randNum].GetName()));
-        }   
+        }
 
         public bool CheckThisKnow()
         {
-             int thisLocNum = GetLocByCoor(this.position);
+            int thisLocNum = GetLocByCoor(this.position);
             bool checkKnow = false;
             for (int i = 0; i < this.knowLocCard.Count; i++)
             {
