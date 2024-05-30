@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace clue
 {
@@ -458,6 +459,21 @@ namespace clue
                 Console.SetCursorPosition(88, 30);
                 Console.WriteLine(" 이동하기       ");
             }
+            else if(menuFlag ==5) // 장소에 도착했을때
+            {
+                Console.SetCursorPosition(86, 27);
+                Console.BackgroundColor = ConsoleColor.Blue;
+                Console.WriteLine(" [ MENU ] ");
+                Console.ResetColor();
+                Console.SetCursorPosition(88, 30);
+                Console.WriteLine(" 이동하기        ");
+                Console.SetCursorPosition(88, 32);
+                Console.WriteLine(" 멈추기       ");
+                Console.SetCursorPosition(88, 34);
+                Console.WriteLine("                 ");
+                Console.SetCursorPosition(88, 36);
+                Console.WriteLine("                 ");  
+            }
             else
             {
                 Console.SetCursorPosition(85, 27);
@@ -532,7 +548,7 @@ namespace clue
                 Console.Write(" ► ");
             }
         }
-        public int ChooseUserMenu(int menuFlag, int defaultNum = 0)
+        public int ChooseUserMenu(int menuFlag, User user, int defaultNum = 0)
         {
             int menuNum = 0;
             menuNum = defaultNum;
@@ -541,30 +557,81 @@ namespace clue
             if (menuFlag == 3)
             {
                 bool returnTrue = false;
+                bool checkReturn = false;
 
-                while (true)
+                bool isMenu = true;
+                while (isMenu)
                 {
-                    ViewMenuCursor(menuFlag, menuNum);
-                    key = Console.ReadKey(true).Key;
-
-                    switch (key)
+                    int loc =  user.GetLocByCoor(user.position);
+                    if(!loc.Equals(0) && !checkReturn)
                     {
-                        case ConsoleKey.UpArrow:
-                            if (menuNum == 0) menuNum=3;
-                            else menuNum--;
-                            break;
-                        case ConsoleKey.DownArrow:
-                            if (menuNum == 3) menuNum = 0;
-                            else menuNum++;
-                            break;
-                        case ConsoleKey.Enter:
-                            returnTrue = true;
-                            break;
+                        ViewMenuLabel(5); 
+                        int menuNum2 = 0;
+                        while(true)
+                        {
+                            ViewMenuCursor(1, menuNum2);
+                            key = Console.ReadKey(true).Key;
+
+                            switch (key)
+                            {
+                                case ConsoleKey.UpArrow:
+                                    if (menuNum2 == 0) menuNum2 = 1;
+                                    else menuNum2--;
+                                    break;
+                                case ConsoleKey.DownArrow:
+                                    if (menuNum2 == 1) menuNum2 = 0;
+                                    else menuNum2++;
+                                    break;
+                                case ConsoleKey.Enter:
+                                    checkReturn = true;
+                                    break;
+                            }
+                             if(checkReturn)
+                            {
+                                 if(menuNum2==1)
+                                {
+                                    user.SetMoveCount(0);
+                                    isMenu = false;
+                                    break;
+                                }
+                                break;
+                            }
+                        }
                     }
-
-                   if(returnTrue)
+                    else
                     {
-                        break;
+                        ViewMenuLabel(3);    //0: 위 , 1: 아래, 2: 왼, 3: 오른
+                        ViewMenuCursor(menuFlag, menuNum);
+                        key = Console.ReadKey(true).Key;
+
+                        switch (key)
+                        {
+                            case ConsoleKey.UpArrow:
+                                if (menuNum == 0) menuNum=3;
+                                else menuNum--;
+                                break;
+                            case ConsoleKey.DownArrow:
+                                if (menuNum == 3) menuNum = 0;
+                                else menuNum++;
+                                break;
+                            case ConsoleKey.Enter:
+                                returnTrue = true;
+                                break;
+                        }
+                        if (returnTrue)
+                        {
+                            // 추가 논리
+                            if (menuNum == 2)
+                            {
+                                user.SetMoveCount(0);
+                                isMenu = false;
+                            }
+                            break;
+                        }
+                    }
+                     if (user.GetMoveCount() <= 0)
+                    {
+                        isMenu = false;
                     }
                 }
             }
@@ -642,16 +709,16 @@ namespace clue
                     if(i%2 == 0)
                     {
                         a = a + 2;
-                        Console.SetCursorPosition(88, a);
+                        Console.SetCursorPosition(86, a);
                     }
                     else
                     {
-                        Console.SetCursorPosition(96, a);
+                        Console.SetCursorPosition(98, a);
                     }
                     Console.WriteLine($" {guessCards[i].GetName()}");
                 }
 
-                Console.SetCursorPosition(88, a + 2);
+                Console.SetCursorPosition(86, a + 2);
                 Console.WriteLine(" 돌아가기 ");
             }
             else
@@ -676,16 +743,16 @@ namespace clue
                     if (i % 2 == 0)
                     {
                         a = a + 2;
-                        Console.SetCursorPosition(88, a);
+                        Console.SetCursorPosition(86, a);
                     }
                     else
                     {
-                        Console.SetCursorPosition(96, a);
+                        Console.SetCursorPosition(98, a);
                     }
                     Console.WriteLine($" {guessCards[i].GetName()}");
                 }
                 
-                Console.SetCursorPosition(88, a+2);
+                Console.SetCursorPosition(86, a+2);
                 Console.WriteLine(" 돌아가기 ");
             }
         }
@@ -698,11 +765,11 @@ namespace clue
                     if (i % 2 == 0)
                     {
                         a = a + 2;
-                        Console.SetCursorPosition(85, a);
+                        Console.SetCursorPosition(83, a);
                     }
                     else
                     {
-                        Console.SetCursorPosition(93, a);
+                        Console.SetCursorPosition(95, a);
                     }
                     Console.Write("   ");
                 }
@@ -710,47 +777,47 @@ namespace clue
 
             if(thisCursor == 0)
             {
-                Console.SetCursorPosition(85, 30);
+                Console.SetCursorPosition(83, 30);
                 Console.Write(" ► ");
             }
             else if(thisCursor == 1)
             {
-                Console.SetCursorPosition(93, 30);
+                Console.SetCursorPosition(95, 30);
                 Console.Write(" ► ");
             }
             else if(thisCursor == 2)
             {
-                Console.SetCursorPosition(85, 32);
+                Console.SetCursorPosition(83, 32);
                 Console.Write(" ►  ");
             }
             else if(thisCursor == 3)
             {
-                Console.SetCursorPosition(93, 32);
+                Console.SetCursorPosition(95, 32);
                 Console.Write(" ►  ");
             }
             else if(thisCursor == 4)
             {
-                Console.SetCursorPosition(85, 34);
+                Console.SetCursorPosition(83, 34);
                 Console.Write(" ►  ");
             }
             else if(thisCursor == 5)
             {
-                Console.SetCursorPosition(93, 34);
+                Console.SetCursorPosition(95, 34);
                 Console.Write(" ►  ");
             }
             else if(thisCursor == 6)
             {
-                Console.SetCursorPosition(85, 36);
+                Console.SetCursorPosition(83, 36);
                 Console.Write(" ►  ");
             }
             else if(thisCursor == 7)
             {
-                Console.SetCursorPosition(93, 36);
+                Console.SetCursorPosition(95, 36);
                 Console.Write(" ►  ");
             }
             else
             {
-                Console.SetCursorPosition(85, 38);
+                Console.SetCursorPosition(83, 38);
                 Console.Write(" ►  ");
             }
         }
@@ -1012,5 +1079,55 @@ namespace clue
         {
             return thisGuessCard;
         }
+
+        public void ViewNoUserGuess()
+        {
+            Console.Clear();
+            Console.SetCursorPosition(42, 20);
+            Console.WriteLine($" 당신의 추리가 틀렸습니다. :( ");
+            
+            Console.SetCursorPosition(42, 24);
+            Console.WriteLine($" 당신은 탈락하였습니다. ");
+
+            Console.SetCursorPosition(42, 26);
+            Console.WriteLine($"  * 탈락하더라도 증명에는 계속 참여합니다.  ");
+
+            Thread.Sleep(300);
+
+            Console.ReadLine();
+            Console.Clear();
+        }
+
+        public void ViewGuessListIntro(int player)
+        {
+            Card locCard = new Card(0, CardType.LOC, "temp");
+            Card wepCard = new Card(0, CardType.WEP, "temp");
+            Card perCard = new Card(0, CardType.PER, "temp");
+
+            for(int i = 0; i < thisGuessCard.Count; i++)
+            {
+                if(thisGuessCard[i].GetCardType().Equals(CardType.LOC))
+                        locCard = thisGuessCard[i];
+                else if(thisGuessCard[i].GetCardType().Equals(CardType.PER))
+                    perCard = thisGuessCard[i];
+                else
+                    wepCard = thisGuessCard[i];
+            }
+
+            Console.Clear();
+            Console.SetCursorPosition(42, 17);
+            Console.WriteLine($" [ COM{player} 가 추리를합니다. ] ");
+
+            Console.SetCursorPosition(50, 20);
+            Console.WriteLine($" COM{player} 의  추리");
+            Console.SetCursorPosition(38, 22);
+            Console.WriteLine($" > {locCard.GetName()} 에서 {perCard.GetName()} 가 {wepCard.GetName()}으로 살해!  ");
+        
+            Thread.Sleep(300);
+
+            Console.ReadLine();
+            Console.Clear();
+        }
+
     }
 }

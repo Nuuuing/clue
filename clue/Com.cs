@@ -12,7 +12,7 @@ namespace clue
         List<Card> knowLocCard = new List<Card>();    //알고있는 카드 정보
         List<Card> knowWepCard = new List<Card>();
         List<Card> knowPerCard = new List<Card>();
-        public int checkLoc;           //현재 찾고있는 장소
+        public int checkLoc = 0;           //현재 찾고있는 장소
         public Queue<(int, int)> goPath = new Queue<(int, int)>();   //가고있는 루트
 
         public Com(List<Card> startCard)
@@ -23,17 +23,27 @@ namespace clue
         public bool CheckGoLocation()   //새로운 장소를 찾아야 하는지 여부
         {
             bool check = true;
-            if (knowLocCard != null)
+            if(checkLoc == 0)
+            {
+                return true;
+            }
+            else if (knowLocCard != null)
             {
                 for (int i = 0; i < knowLocCard.Count; i++)
                 {
                     if (knowLocCard[i].GetLocNum().Equals(checkLoc))
                     {
                         //알고있는 정보중에 현재 가고있는 장소가 포함되면
-                        return true;
+                        check =true;
+                        break;
+                    }
+                    else
+                    {
+                        check = false;
                     }
                 }
             }
+
             return check;
         }
 
@@ -110,6 +120,32 @@ namespace clue
                 return 11;
             else
                 return -1;
+        }
+
+        public string GetNameByNum(int num) // 번호로 카드 명칭 반환
+        {
+            if (num.Equals(2))
+                return "중앙홀";
+            else if (num.Equals(3))
+                return "식당";
+            else if  (num.Equals(4))
+                return "부엌";
+            else if  (num.Equals(5))
+                return "거실";
+            else if  (num.Equals(6))
+                return "마당";
+            else if  (num.Equals(7))
+                return "차고";
+            else if  (num.Equals(8))
+                return "게임룸";
+            else if  (num.Equals(9))
+                return "침실";
+            else if  (num.Equals(10))
+                return "욕실";
+            else if  (num.Equals(11))
+                return "서재";
+            else
+                return "복도";
         }
 
         public string GetNameByCoor((int, int) _position) //좌표로 카드 명칭 반환
@@ -321,19 +357,58 @@ namespace clue
             return sameCardList[num];
         }
 
-        public bool CheckCanFinal() //최종 추리 가능한지 여부 (아는 카드 각 2개 이하)
+        public bool CheckCanFinal(GameManager _instance) //최종 추리 가능한지 여부 (모르는 카드 각 2개 이하)
         {
             bool canFinal = false;
-            if(knowLocCard.Count <= 2)
+
+            List<Card> allCard = _instance.GetAllCard();
+            List<Card> unknownCards = new List<Card>();
+
+             for (int i = 0; i < allCard.Count; i++)
             {
-                if(knowPerCard.Count <=2)
+                Card card = allCard[i];
+                if (!knowLocCard.Contains(card) && !knowWepCard.Contains(card) && !knowPerCard.Contains(card))
                 {
-                    if(knowWepCard.Count <=2)
-                    {
-                        canFinal = true;
-                    }
+                    unknownCards.Add(card);
                 }
             }
+
+            int unknownLocCount = 0;
+            int unknownWepCount = 0;
+            int unknownPerCount = 0;
+
+            for (int i = 0; i < unknownCards.Count; i++)
+            {
+                Card card = unknownCards[i];
+                switch (card.GetCardType())
+                {
+                    case CardType.LOC:
+                        unknownLocCount++;
+                        break;
+                    case CardType.WEP:
+                        unknownWepCount++;
+                        break;
+                    case CardType.PER:
+                        unknownPerCount++;
+                        break;
+                }
+            }
+
+            if(unknownLocCount <=2)
+            {
+                if(unknownPerCount <=2)
+                {
+                    if(unknownWepCount <= 2)
+                        canFinal = true;
+                    else
+                        canFinal = false;
+                }
+                else
+                    canFinal = false;
+            }
+            else
+                canFinal = false;
+
             return canFinal;
         }
 
@@ -430,5 +505,33 @@ namespace clue
             return checkCorrect;
         }
 
+         public void ViewFinalGuessIntro(int player)
+        {
+            Console.Clear();
+            Console.SetCursorPosition(50, 20);
+            Console.WriteLine($" [ COM {player} 가 최종 추리를 합니다. ] ");
+
+            Console.ReadLine();
+            Console.Clear();
+        }
+
+        public void ViewFinalGuessCheckIntro(int player, bool check)
+        {
+            Console.Clear();
+            Console.SetCursorPosition(42, 20);
+            
+            if(check)
+            {
+                Console.WriteLine($" [ COM {player} 의 최종추리 가 맞았습니다. ] ");
+            }
+            else
+            {
+                Console.WriteLine($" [ COM {player} 의 최종추리 가 틀렸습니다.] ");
+                Console.SetCursorPosition(42, 25);
+                Console.WriteLine($"    COM {player} 이 게임에 탈락합니다.  ");
+                Console.SetCursorPosition(42, 27);
+                Console.WriteLine($"  * 탈락하더라도 증명에는 계속 참여합니다.  ");
+            }
+        }
     }
 }

@@ -33,25 +33,25 @@ namespace clue
         
         public int GetLocByCoor((int, int) _position) //좌표로 장소번호 return
         {
-            if (_position == (9,11))
+            if (_position.Equals((9,11)))
                 return 2;
-            else if (_position == (4, 11))
+            else if (_position.Equals((4, 11)))
                 return 3;
-            else if (_position == (3, 6))
+            else if (_position.Equals((3, 6)))
                 return 4;
-            else if (_position == (3, 17))
+            else if (_position.Equals((3, 17)))
                 return 5;
-            else if (_position == (10, 20))
+            else if (_position.Equals((10, 20)))
                 return 6;
-            else if (_position == (16, 17))
+            else if (_position.Equals((16, 17)))
                 return 7;
-            else if (_position == (16, 11))
+            else if (_position.Equals((16, 11)))
                 return 8;
-            else if (_position == (16, 4))
+            else if (_position.Equals((16, 4)))
                 return 9;
-            else if (_position == (13, 2))
+            else if (_position.Equals((13, 2)))
                 return 10;
-            else if (_position == (10, 4))
+            else if (_position.Equals((10, 4)))
                 return 11;
             else
                 return 0;
